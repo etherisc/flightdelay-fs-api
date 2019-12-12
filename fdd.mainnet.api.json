@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "name": "fdd.mainnet.api",
+      "script": "npm",
+      "args": "start",
+      "log_date_format": "YYYY-MM-DD HH:mm Z"
+    }
+  ]
+}

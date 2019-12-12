@@ -1,0 +1,34 @@
+{
+  "statusCode": 200,
+  "headers": {
+    "date": "Thu, 15 Mar 2018 07:55:09 GMT",
+    "content-type": "application/json;charset=UTF-8",
+    "transfer-encoding": "chunked",
+    "connection": "close",
+    "server": "Apache-Coyote/1.1",
+    "x-request-id": "cdc942b9-8750-48d0-b743-1658a4bfe4fd",
+    "access-control-allow-origin": "*",
+    "access-control-allow-methods": "POST, GET, PUT, OPTIONS, DELETE",
+    "access-control-max-age": "3600",
+    "access-control-allow-headers": "x-requested-with, Content-Type, x-authorization-key, x-authorization-token, Accept-Language, Authorization, X-idempotence-uuid, X-Language, X-Frame-Options",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "1; mode=block",
+    "cache-control": "no-cache, no-store, max-age=0, must-revalidate, no-store",
+    "pragma": "no-cache, no-cache",
+    "expires": "0",
+    "x-frame-options": "DENY"
+  },
+  "url": "https://api.sandbox.transferwise.tech:443/oauth/token",
+  "time": 20,
+  "request": {
+    "method": "POST",
+    "headers": {
+      "User-Agent": "node-XMLHttpRequest",
+      "Accept": "*/*, application/json, text/plain, */*",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": "Basic ZXRoZXJpc2M6YjA0YmRiNmYtMjU0Yi00OTAxLThhYTYtYjI2NTg1MWMyYmQ3",
+      "Host": "api.sandbox.transferwise.tech",
+      "Content-Length": 75
+    }
+  }
+}

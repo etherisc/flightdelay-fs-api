@@ -1,0 +1,36 @@
+{
+  "statusCode": 200,
+  "headers": {
+    "date": "Thu, 15 Mar 2018 07:55:10 GMT",
+    "content-type": "application/json;charset=UTF-8",
+    "content-length": "803",
+    "connection": "close",
+    "server": "Apache-Coyote/1.1",
+    "x-request-id": "61fa2c7b-856f-497d-a4d3-bede9ad8c19e",
+    "access-control-allow-origin": "*",
+    "access-control-allow-methods": "POST, GET, PUT, OPTIONS, DELETE",
+    "access-control-max-age": "3600",
+    "access-control-allow-headers": "x-requested-with, Content-Type, x-authorization-key, x-authorization-token, Accept-Language, Authorization, X-idempotence-uuid, X-Language, X-Frame-Options",
+    "x-content-type-options": "nosniff, nosniff",
+    "x-xss-protection": "1; mode=block, 1; mode=block",
+    "cache-control": "no-cache, no-store, max-age=0, must-revalidate, no-cache, no-store, max-age=0, must-revalidate",
+    "pragma": "no-cache, no-cache",
+    "expires": "0",
+    "x-frame-options": "DENY, DENY",
+    "x-application-context": "account-details:staging:12345",
+    "x-newrelic-app-data": "PxQGWVBaCwUGR1hUDwIAXlMEFB9AMQYAZBBZDEtZV0ZaClc9HjJDEA1YUCIJDUxBXwgNB0VtGBBVbRlSAQUMF14WS0IQaHthZ0wbTQFPA05UGARXU1sMBgZWTVMFAhtEBwRUVVJRVQcEVVpaAQsDBBFJXwBdElY/"
+  },
+  "url": "https://api.sandbox.transferwise.tech:443/v1/accounts",
+  "time": 3,
+  "request": {
+    "method": "POST",
+    "headers": {
+      "User-Agent": "node-XMLHttpRequest",
+      "Accept": "*/*, application/json, text/plain, */*",
+      "Content-Type": "application/json;charset=utf-8",
+      "Authorization": "Bearer 1a823851-78e2-4b9a-ae9a-6742c6cb6c38",
+      "Host": "api.sandbox.transferwise.tech",
+      "Content-Length": 123
+    }
+  }
+}

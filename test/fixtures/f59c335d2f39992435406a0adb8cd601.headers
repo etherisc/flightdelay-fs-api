@@ -1,0 +1,29 @@
+{
+  "statusCode": 200,
+  "headers": {
+    "server": "Apache-Coyote/1.1",
+    "content-type": "application/json;charset=UTF-8",
+    "content-length": "3375",
+    "date": "Thu, 21 Jun 2018 14:34:00 GMT",
+    "connection": "close"
+  },
+  "url": "https://api.flightstats.com/flex/ratings/rest/v1/json/flight/AM/3158?appId=CODE&appKey=KEY",
+  "time": 679,
+  "request": {
+    "method": "GET",
+    "headers": {
+      "accept-encoding": [
+        "gzip,deflate"
+      ],
+      "user-agent": [
+        "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)"
+      ],
+      "connection": [
+        "close"
+      ],
+      "accept": [
+        "*/*"
+      ]
+    }
+  }
+}
