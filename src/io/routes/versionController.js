@@ -1,8 +1,8 @@
 
-module.exports = ({ router, versionService }) => {
+module.exports = ({ router, config, versionService }) => {
 
-  router.get('/api/appVersion', async (ctx) => {
-    const appVersion = await versionService.retrieveAppVersion();
+  router.get(config.API_VERSION + '/version', async (ctx) => {
+    const appVersion = await versionService.retrieveVersion();
 
     ctx.ok(appVersion)
   })

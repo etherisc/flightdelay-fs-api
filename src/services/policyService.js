@@ -1,17 +1,26 @@
 
-class PolicyService {
-  constructor ({ payoutCalcService, policyRepo, customerRepo }) {
+module.exports = class PolicyService {
+  constructor ({ policyRepo }) {
   }
 
-  async getPolicy (id) {
+  /**
+   * Apply for a policy.
+   *
+   * @param applyCommand JSON describing the application. Contains client data, contract data, parcel data.
+   */
+  applyForPolicy(applyCommand) {
+
+
+
   }
 
-  async findAllByCustomerId (customerId) {
-    const policies = await this.policyRepo.findAllByCustomerId(customerId);
+  /**
+   * Underwrite a policy.
+   *
+   * @param underwriteCommand JSON describing the underwrite Command. Contains application ID
+   */
+  underwritePolicy(underwriteCommand) {
 
-    return policies.map(policy => ({ ...policy, amount: this.formatAmount(policy) }))
   }
 
-}
-
-module.exports = PolicyService;
+};

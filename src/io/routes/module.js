@@ -1,13 +1,12 @@
-const customerController = require('./customerController');
 const policyController = require('./policyController');
 const versionController = require('./versionController');
 
-module.exports = ({ router, config, serviceDeps, ioDeps, modelDeps }) => {
-  const controllerDeps = { router, config, ...serviceDeps, ...ioDeps, ...modelDeps };
+module.exports = ({ routerCommand, router, config, serviceDeps, ioDeps, modelDeps }) => {
+
+  const controllerDeps = { routerCommand, router, config, ...serviceDeps, ...ioDeps, ...modelDeps };
 
   versionController(controllerDeps);
   policyController(controllerDeps);
-  customerController(controllerDeps);
 
-  router.get('/api/health-check', async (ctx) => ctx.ok('OK'))
+  router.get(config.API_VERSION + '/health-check', async (ctx) => ctx.ok('OK'))
 };

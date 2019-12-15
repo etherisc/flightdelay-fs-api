@@ -1,35 +1,26 @@
-const fs = require('fs');
-const path = require('path');
 
-class VersionService {
-  constructor ({ contractResolver }) {
+module.exports = class VersionService {
+
+  /**
+   * Constructor.
+   *
+   * @param config Config Object, contains API_VERSION
+   * @param contractResolver contractResolver, returns contract object
+   */
+
+  constructor ({ config, contractResolver }) {
+    this.config = config;
     this.contractResolver = contractResolver
   }
 
-  async retrieveAppVersion () {
-    let appVersion;
-
-    try {
-      const appVersionJson = await this.loadVersionFrom('./../version.json');
-
-      appVersion = JSON.parse(appVersionJson).version
-    } catch (error) {
-      console.log(error);
-
-      appVersion = 'Not Specified'
-    }
-
-    const contractsVersion = (await this.contractResolver.getContractsVersion()) || 'Not Specified';
-    return { appVersion, contractsVersion }
+  /**
+   * Retrieve API version.
+   * @returns {Promise<{version: string}>}
+   */
+  async retrieveVersion () {
+    // TODO implement contract versions
+    // const contractsVersion = (await this.contractResolver.getContractsVersion()) || 'Not Specified';
+    return { version: this.config.API_VERSION };
   }
 
-  async loadVersionFrom (fileName) {
-    const fullPath = path.join(__dirname, fileName);
-
-    return new Promise((resolve, reject) => {
-      fs.readFile(fullPath, 'utf8', (err, data) => !err ? resolve(data) : reject(err))
-    })
-  }
-}
-
-module.exports = VersionService;
+};

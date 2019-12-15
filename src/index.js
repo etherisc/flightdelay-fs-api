@@ -1,27 +1,37 @@
+/**
+ * Implement a REST API Server based on koa router.
+ * @type {Application|*}
+ */
+
 const Koa = require('koa');
 const Router = require('koa-router');
 const BodyParser = require('koa-bodyparser');
 const Cors = require('kcors');
 const Respond = require('koa-respond');
 const Logger = require('koa-logger');
-const Knex = require('knex');
+// const Knex = require('knex');
 const log = require('bristol');
 const palin = require('palin');
 const dotenv = require('dotenv');
-const dbConfig = require('../knexfile');
+// const dbConfig = require('../knexfile');
 const ioModule = require('./io/module');
 const servicesModule = require('./services/module');
 const routesModule = require('./io/routes/module');
+const RouterCommand = require('./io/routes/routerCommand');
 
 function runServer () {
-  const config = dotenv.load().parsed;
+  const config = Object.assign(
+    {},
+    dotenv.load().parsed,
+    {API_VERSION: "/api/v1"});
   log.addTarget('console').withFormatter(palin);
 
-  const ioDeps = ioModule({ config, knex: Knex(dbConfig) });
-  const serviceDeps = servicesModule({ config, ioDeps, modelDeps });
+  const ioDeps = ioModule({ config }); //, knex: Knex(dbConfig) });
+  const serviceDeps = servicesModule({ config, ioDeps});
 
   const router = new Router();
-  routesModule({ router, config, ioDeps, modelDeps, serviceDeps });
+  const routerCommand = new RouterCommand({router, config, ...ioDeps});
+  routesModule({ routerCommand, router, config, ioDeps, serviceDeps });
 
   const app = new Koa();
 
