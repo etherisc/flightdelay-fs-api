@@ -1,12 +1,13 @@
-const addressResolverAbi = require('./abi/FlightDelayAddressResolverAbi.json');
-const newPolicyAbi = require('./abi/FlightDelayNewPolicyAbi.json');
-const controllerAbi = require('./abi/FlightDelayControllerAbi.json');
-const databaseAbi = require('./abi/FlightDelayDatabaseAbi.json');
+const addressResolverAbi = require('./abi/FlightDelayAddressResolverAbi.json')
+const newPolicyAbi = require('./abi/FlightDelayNewPolicyAbi.json')
+const controllerAbi = require('./abi/FlightDelayControllerAbi.json')
+const databaseAbi = require('./abi/FlightDelayDatabaseAbi.json')
 
-class ContractResolver {
+module.exports = class ContractResolver {
+
   constructor (config, web3) {
-    this.config = config;
-    this.web3 = web3;
+    this.config = config
+    this.web3 = web3
 
     this.onReady = this._loadAddressResolver()
       .then(() => this._loadNewPolicy())
@@ -15,7 +16,7 @@ class ContractResolver {
   }
 
   async _loadAddressResolver () {
-    const addressResolverAddress = this.config.FD_ADDRESS_RESOLVER;
+    const addressResolverAddress = this.config.FD_ADDRESS_RESOLVER
 
     this.addressResolver = {
       name: 'FD.AddressResolver',
@@ -25,7 +26,7 @@ class ContractResolver {
   }
 
   async _loadNewPolicy () {
-    const newPolicyAddress = await this.addressResolver.instance.methods.getAddress().call();
+    const newPolicyAddress = await this.addressResolver.instance.methods.getAddress().call()
 
     this.newPolicy = {
       name: 'FD.NewPolicy',
@@ -35,7 +36,7 @@ class ContractResolver {
   }
 
   async _loadController () {
-    const controllerAddress = await this.newPolicy.instance.methods.controller().call();
+    const controllerAddress = await this.newPolicy.instance.methods.controller().call()
     this.controller = {
       name: 'FD.Controller',
       address: controllerAddress,
@@ -44,7 +45,7 @@ class ContractResolver {
   }
 
   async _loadDb () {
-    const DB = (await this.controller.instance.methods.contracts(this.web3.utils.toHex('FD.Database')).call())[0];
+    const DB = (await this.controller.instance.methods.contracts(this.web3.utils.toHex('FD.Database')).call())[0]
 
     this.db = {
       name: 'FD.Database',
@@ -63,11 +64,11 @@ class ContractResolver {
 
   async getContractsVersion () {
     try {
-      const controllerInstance = this.controller.instance;
+      const controllerInstance = this.controller.instance
 
-      const major = await controllerInstance.methods.MAJOR_VERSION().call();
-      const minor = await controllerInstance.methods.MINOR_VERSION().call();
-      const patch = await controllerInstance.methods.PATCH_VERSION().call();
+      const major = await controllerInstance.methods.MAJOR_VERSION().call()
+      const minor = await controllerInstance.methods.MINOR_VERSION().call()
+      const patch = await controllerInstance.methods.PATCH_VERSION().call()
 
       return `${major}.${minor}.${patch}`
     } catch (error) {
@@ -75,5 +76,3 @@ class ContractResolver {
     }
   }
 }
-
-module.exports = ContractResolver;

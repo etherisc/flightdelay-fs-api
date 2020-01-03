@@ -12,7 +12,7 @@ class EtherscanClient {
   }
 
   async waitToBeMined (txHash, interval = 5000) {
-    let result = null;
+    let result = null
 
     while (result === null || !result.blockNumber) {
       try {
@@ -32,4 +32,4 @@ function timeout (delay) {
   return new Promise((resolve, reject) => setTimeout(resolve, delay))
 }
 
-module.exports = EtherscanClient;
+module.exports = EtherscanClient

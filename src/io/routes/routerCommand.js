@@ -7,13 +7,21 @@ module.exports = class RouterCommand {
    * @param router  koa router
    * @param ajv     minimal json schema validator
    */
-  constructor({config, router, ajv}) {
-    this.config = config;
-    this.router = router;
-    this.ajv = ajv;
+  constructor ({config, router, ajv}) {
+    this.config = config
+    this.router = router
+    this.ajv = ajv
   }
 
-  command(method, path, schema, command) {
+  /**
+   * Handle a generic api method call.
+   * @param method
+   * @param path
+   * @param schema
+   * @param service
+   * @param command
+   */
+  command (method, path, schema, service, command) {
 
     /**
      * Workflow:
@@ -23,30 +31,32 @@ module.exports = class RouterCommand {
      * 4. Handle command errors
      */
     this.router[method](this.config.API_VERSION + path, async (ctx) => {
-      const data = ctx.request.body;
-      const validate = this.ajv.compile(schema);
+      const data = ctx.request.body
+      const validate = this.ajv.compile(schema)
 
       if (!validate(data)) {
-        ctx.badRequest({error: validate.errors});
+        ctx.badRequest({error: validate.errors})
         return
       }
 
       try {
-        ctx.ok(await command(data))
+        console.log(service, command)
+        ctx.ok(await service[command](data))
       } catch (error) {
+
+        console.log(error)
         ctx.badRequest(error)
       }
-    });
+    })
 
   }
 
-  post(path, schema, command) {
-    this.command('post', path, schema, command);
+  post (path, schema, service, command) {
+    this.command('post', path, schema, service, command)
   }
 
-  get(path, schema, command) {
-    this.command('get', path, schema, command)
+  get (path, schema, service, command) {
+    this.command('get', path, schema, service, command)
   }
 
-};
-
+}

@@ -1,6 +1,9 @@
 
 module.exports = class PolicyService {
   constructor ({ policyRepo }) {
+
+    this.policyRepo = policyRepo
+
   }
 
   /**
@@ -8,9 +11,9 @@ module.exports = class PolicyService {
    *
    * @param applyCommand JSON describing the application. Contains client data, contract data, parcel data.
    */
-  applyForPolicy(applyCommand) {
+  applyForPolicy (applyCommand) {
 
-
+    return ({applicationId: 5})
 
   }
 
@@ -19,8 +22,22 @@ module.exports = class PolicyService {
    *
    * @param underwriteCommand JSON describing the underwrite Command. Contains application ID
    */
-  underwritePolicy(underwriteCommand) {
+  underwritePolicy (underwriteCommand) {
+
+    return ({policyId: 5})
 
   }
 
-};
+  createClaim (createClaimCommand) {
+
+    return ({claimId: 5})
+
+  }
+
+  confirmClaim (confirmClaimCommand) {
+
+    return ({payoutId: 5})
+
+  }
+
+}

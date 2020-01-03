@@ -1,12 +1,12 @@
 
 class PolicyEthRepo {
   constructor (contractResolver) {
-    this.contractResolver = contractResolver;
+    this.contractResolver = contractResolver
     this.web3 = contractResolver.web3
   }
 
   async findPolicyById (id) {
-    const policyRaw = await this.contractResolver.db.instance.methods.policies(id).call();
+    const policyRaw = await this.contractResolver.db.instance.methods.policies(id).call()
 
     return {
       id: id,
@@ -30,20 +30,20 @@ class PolicyEthRepo {
 const currencyByCode = code => {
   switch (code) {
     case '0':
-      return 'eth';
+      return 'eth'
 
     case '1':
-      return 'eur';
+      return 'eur'
 
     case '2':
-      return 'usd';
+      return 'usd'
 
     case '3':
-      return 'gbp';
+      return 'gbp'
 
     default:
       throw new Error('Currency is not supported')
   }
-};
+}
 
-module.exports = PolicyEthRepo;
+module.exports = PolicyEthRepo

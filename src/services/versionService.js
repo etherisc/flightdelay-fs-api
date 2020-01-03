@@ -9,7 +9,7 @@ module.exports = class VersionService {
    */
 
   constructor ({ config, contractResolver }) {
-    this.config = config;
+    this.config = config
     this.contractResolver = contractResolver
   }
 
@@ -20,7 +20,7 @@ module.exports = class VersionService {
   async retrieveVersion () {
     // TODO implement contract versions
     // const contractsVersion = (await this.contractResolver.getContractsVersion()) || 'Not Specified';
-    return { version: this.config.API_VERSION };
+    return { version: this.config.API_VERSION }
   }
 
-};
+}
