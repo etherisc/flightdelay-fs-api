@@ -5,9 +5,10 @@ module.exports = class RouterCommand {
    *
    * @param config  Config Object, contains API_VERSION
    * @param router  koa router
+   * @param authenticator
    * @param ajv     minimal json schema validator
    */
-  constructor ({config, router, ajv}) {
+  constructor ({config, router, authenticator, ajv}) {
     this.config = config
     this.router = router
     this.ajv = ajv
@@ -40,23 +41,21 @@ module.exports = class RouterCommand {
       }
 
       try {
-        console.log(service, command)
-        ctx.ok(await service[command](data))
+        await service[command](ctx, data)
       } catch (error) {
-
-        console.log(error)
+        console.error(error)
         ctx.badRequest(error)
       }
     })
 
   }
 
-  post (path, schema, service, command) {
-    this.command('post', path, schema, service, command)
+  post (...args) {
+    this.command('post', ...args)
   }
 
-  get (path, schema, service, command) {
-    this.command('get', path, schema, service, command)
+  get (...args) {
+    this.command('get', ...args)
   }
 
 }

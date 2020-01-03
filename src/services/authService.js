@@ -5,21 +5,24 @@ module.exports = class AuthService {
   constructor ({config}) {
     this.config = config
     this.secret = config.JWT_SECRET
+    this.api_username = config.API_USERNAME
+    this.api_password = config.API_PASSWORD
   }
 
   /**
    * Authenticate a user.
    *
+   * @param ctx
    * @param credentials username and password
    */
-  async authenticate (credentials) {
+  async authenticate (ctx, credentials) {
 
-    if (credentials.username === 'beacon' && credentials.password === 'horizon2020') {
-      const payload = {user: 'beacon'}
+    if (credentials.username === this.api_username && credentials.password === this.api_password) {
+      const payload = {user: this.api_username}
       const token = jwt.sign(payload, this.secret)
-      return {token}
+      ctx.ok({token})
     } else {
-      return 'ok'
+      ctx.throw(401, 'Invalid username/password')
     }
   }
 }

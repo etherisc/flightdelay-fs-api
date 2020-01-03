@@ -4,6 +4,7 @@
  */
 
 const Koa = require('koa')
+const JWT = require('koa-jwt')
 const Router = require('koa-router')
 const BodyParser = require('koa-bodyparser')
 const Cors = require('kcors')
@@ -38,6 +39,7 @@ function runServer () {
     .use(new BodyParser())
     .use(new Respond())
     .use(unhandledExceptionHandler)
+    .use(JWT({ secret: config.JWT_SECRET }).unless({path: /\/auth/}))
     .use(router.routes())
     .use(router.allowedMethods())
 

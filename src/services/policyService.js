@@ -9,34 +9,47 @@ module.exports = class PolicyService {
   /**
    * Apply for a policy.
    *
+   * @param ctx
    * @param applyCommand JSON describing the application. Contains client data, contract data, parcel data.
+   *
    */
-  applyForPolicy (applyCommand) {
+  applyForPolicy (ctx, applyCommand) {
 
-    return ({applicationId: 5})
+    ctx.ok({applicationId: 5})
 
   }
 
   /**
    * Underwrite a policy.
    *
+   * @param ctx
    * @param underwriteCommand JSON describing the underwrite Command. Contains application ID
    */
-  underwritePolicy (underwriteCommand) {
+  underwritePolicy (ctx, underwriteCommand) {
 
-    return ({policyId: 5})
-
-  }
-
-  createClaim (createClaimCommand) {
-
-    return ({claimId: 5})
+    ctx.ok({policyId: 5})
 
   }
 
-  confirmClaim (confirmClaimCommand) {
+  /**
+   *
+   * @param ctx
+   * @param createClaimCommand
+   */
+  createClaim (ctx, createClaimCommand) {
 
-    return ({payoutId: 5})
+    ctx.ok({claimId: 5})
+
+  }
+
+  /**
+   *
+   * @param ctx
+   * @param confirmClaimCommand
+   */
+  confirmClaim (ctx, confirmClaimCommand) {
+
+    ctx.ok({payoutId: 5})
 
   }
 
