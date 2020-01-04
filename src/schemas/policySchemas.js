@@ -1,7 +1,6 @@
 module.exports = {
 
   contractSchema: {
-    '$schema': 'http://json-schema.org/draft-07/schema#',
     '$id': 'http://beacon-h2020.com/contractSchema.json',
     'type': 'object',
     'required': [
