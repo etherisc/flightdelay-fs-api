@@ -1,20 +1,6 @@
 
-module.exports = ({ routerCommand, authService }) => {
+module.exports = ({ routerCommand, schemas, authService }) => {
 
-  routerCommand.post('/auth', authSchema, authService, 'authenticate')
+  routerCommand.post('/auth', schemas.authSchema, authService, 'authenticate')
 
-}
-
-const authSchema = {
-  $id: '#auth',
-  properties: {
-    username: {
-      type: 'string'
-    },
-    password: {
-      type: 'string'
-    }
-  },
-  required: ['username', 'password'],
-  additionalProperties: false
 }

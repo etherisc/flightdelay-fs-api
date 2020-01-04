@@ -17,6 +17,7 @@ const ioModule = require('./io/module')
 const servicesModule = require('./services/module')
 const routesModule = require('./io/routes/module')
 const RouterCommand = require('./io/routes/routerCommand')
+const schemas = require('./schemas/module')
 
 function runServer () {
   const config = Object.assign(
@@ -29,7 +30,7 @@ function runServer () {
 
   const router = new Router()
   const routerCommand = new RouterCommand({router, config, ...ioDeps})
-  routesModule({ routerCommand, router, config, ioDeps, serviceDeps })
+  routesModule({ routerCommand, router, config, schemas, ioDeps, serviceDeps })
 
   const app = new Koa()
 
