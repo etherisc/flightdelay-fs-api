@@ -9,7 +9,7 @@ const Router = require('koa-router')
 const BodyParser = require('koa-bodyparser')
 const Cors = require('kcors')
 const Respond = require('koa-respond')
-const Logger = require('koa-logger')
+const logger = require('koa-logger')
 // const Knex = require('knex');
 const dotenv = require('dotenv')
 // const dbConfig = require('../knexfile');
@@ -18,6 +18,7 @@ const servicesModule = require('./services/module')
 const routesModule = require('./io/routes/module')
 const RouterCommand = require('./io/routes/routerCommand')
 const schemas = require('./schemas/module')
+const TelegramLogger = require('./io/telegram/telegramLogger')
 
 function runServer () {
   const config = Object.assign(
@@ -25,6 +26,7 @@ function runServer () {
     dotenv.load().parsed,
     {API_VERSION: '/api/v1'})
 
+  const TL = new TelegramLogger()
   const ioDeps = ioModule({ config }) //, knex: Knex(dbConfig) });
   const serviceDeps = servicesModule({ config, ioDeps })
 
@@ -35,7 +37,7 @@ function runServer () {
   const app = new Koa()
 
   app
-    .use(new Logger())
+    .use(logger(TL.telegramTransport))
     .use(new Cors())
     .use(new BodyParser())
     .use(new Respond())
