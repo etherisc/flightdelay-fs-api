@@ -1,7 +1,7 @@
 module.exports = {
 
   monitoringDataSchema: {
-    '$id': 'http://example.com/root.json',
+    '$id': '#data',
     'type': 'object',
     'required': [
       'contract_id',
@@ -20,11 +20,7 @@ module.exports = {
         '$id': '#/properties/insurer',
         'type': 'object',
         'required': [
-          'id',
-          'email',
-          'firstname',
-          'lastname',
-          'blockchain_address'
+          'id'
         ],
         'properties': {
           'id': {
@@ -39,28 +35,32 @@ module.exports = {
             'type': 'string',
             'examples': [
               'jack@blackpearl'
-            ]
+            ],
+            'pattern': '^(.*)$'
           },
           'firstname': {
             '$id': '#/properties/insurer/properties/firstname',
             'type': 'string',
             'examples': [
               'Jack'
-            ]
+            ],
+            'pattern': '^(.*)$'
           },
           'lastname': {
             '$id': '#/properties/insurer/properties/lastname',
             'type': 'string',
             'examples': [
               'Sparrow'
-            ]
+            ],
+            'pattern': '^(.*)$'
           },
           'blockchain_address': {
             '$id': '#/properties/insurer/properties/blockchain_address',
             'type': 'string',
             'examples': [
               '...'
-            ]
+            ],
+            'pattern': '^(.*)$'
           }
         }
       },
@@ -85,10 +85,8 @@ module.exports = {
             'monitoring_data': {
               '$id': '#/properties/parcels/items/properties/monitoring_data',
               'type': 'object',
-              'required': [
-                'hailstorms',
-                'drought'
-              ],
+              'additionalProperties': true,
+              'required': [],
               'properties': {
                 'hailstorms': {
                   '$id': '#/properties/parcels/items/properties/monitoring_data/properties/hailstorms',

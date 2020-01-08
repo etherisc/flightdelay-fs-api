@@ -2,7 +2,7 @@
 module.exports = class PolicyService {
   constructor ({ policyRepo }) {
 
-    this.policyRepo = policyRepo
+    this.policyRepo = policyRepo // TODO: is this still needed?
 
   }
 

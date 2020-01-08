@@ -1,7 +1,7 @@
 
 const {contractSchema, applyForPolicySchema, underwritePolicySchema, createClaimSchema, confirmClaimSchema} = require('../schemas/policySchemas')
 const {authSchema} = require('../schemas/authSchema')
-const {monitoringSchema} = require('../schemas/monitoringSchema')
+const {monitoringDataSchema} = require('./monitoringDataSchema')
 
 module.exports = {
   contractSchema,
@@ -10,5 +10,5 @@ module.exports = {
   createClaimSchema,
   confirmClaimSchema,
   authSchema,
-  monitoringSchema
+  monitoringDataSchema
 }
