@@ -365,7 +365,7 @@ module.exports = {
     }
   },
 
-  'applyForPolicySchema': {
+  applyForPolicySchema: {
     '$id': '#applyForPolicy',
     'properties': {
       'client': {
@@ -390,7 +390,7 @@ module.exports = {
     'additionalProperties': false
   },
 
-  'underwritePolicySchema': {
+  underwritePolicySchema: {
     '$id': '#underwritePolicySchema',
     'type': 'object',
     'properties': {
@@ -401,7 +401,7 @@ module.exports = {
     'additionalProperties': false
   },
 
-  'createClaimSchema': {
+  createClaimSchema: {
     '$id': '#createClaimSchema',
     'type': 'object',
     'properties': {
@@ -412,7 +412,7 @@ module.exports = {
     'additionalProperties': false
   },
 
-  'confirmClaimSchema': {
+  confirmClaimSchema: {
     '$id': '#confirmClaimSchema',
     'type': 'object',
     'properties': {

@@ -19,14 +19,18 @@ const routesModule = require('./io/routes/module')
 const RouterCommand = require('./io/routes/routerCommand')
 const schemas = require('./schemas/module')
 const TelegramLogger = require('./io/telegram/telegramLogger')
+const GIF = require('@etherisc/gifcli')
 
-function runServer () {
+async function runServer () {
+
+  const gif = await GIF.connect()
+
   const config = Object.assign(
     {},
     dotenv.load().parsed,
-    {API_VERSION: '/api/v1'})
+    {API_VERSION: '/api/v1'},
+    {gif})
 
-  const TL = new TelegramLogger()
   const ioDeps = ioModule({ config }) //, knex: Knex(dbConfig) });
   const serviceDeps = servicesModule({ config, ioDeps })
 
@@ -36,8 +40,12 @@ function runServer () {
 
   const app = new Koa()
 
+  if (!process.env.NO_BOT) {
+    const TL = new TelegramLogger()
+    app.use(logger(TL.telegramTransport))
+  }
+
   app
-    .use(logger(TL.telegramTransport))
     .use(new Cors())
     .use(new BodyParser())
     .use(new Respond())

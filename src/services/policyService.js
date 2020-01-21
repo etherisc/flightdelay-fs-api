@@ -1,8 +1,61 @@
 
 module.exports = class PolicyService {
-  constructor ({ policyRepo }) {
+  constructor ({ config, policyRepo }) {
 
     this.policyRepo = policyRepo // TODO: is this still needed?
+    this.gif = config.gif
+    this.log = console.log
+
+    this.normalizeParcel = this._normalizeParcel.bind(this)
+    this.normalizeRisk = this._normalizeRisk.bind(this)
+
+  }
+
+  typeId (peril) {
+    console.log(peril)
+    const perils = ['hailstorms', 'fire', 'drought', 'flood']
+
+    const ti = perils.findIndex((element) => element === peril.toLowerCase())
+    if (ti < 0) throw new Error('Peril "' + peril + '" not allowed')
+    return ti
+  }
+
+  _normalizeRisk (riskData) {
+    return [
+      this.typeId(riskData.type),
+      riskData.threshold1 * 100,
+      riskData.amount1 * 100,
+      riskData.threshold2 * 100,
+      riskData.amount2 * 100,
+      riskData.parcel_id
+    ]
+  }
+
+  _normalizeParcel (parcelData) {
+    this.log(parcelData)
+    return [
+      parcelData.id,
+      parcelData.crop_type.name,
+      new Date(parcelData.sowing_date).getTime() / 1000,
+      new Date(parcelData.harvesting_date).getTime() / 1000,
+      parcelData.area * 1000,
+      parcelData.county.id,
+      parcelData.risks.map(this.normalizeRisk)
+    ]
+  }
+
+  normalize (data) {
+
+    return [
+      data.contract_id,
+      data.client.id,
+      new Date(data.contract_start).getTime() / 1000,
+      new Date(data.contract_end).getTime() / 1000,
+      data.contract_duration,
+      data.insured_area * 1000,
+      data.insured_value * 100,
+      data.parcels.map(this.normalizeParcel)
+    ]
 
   }
 
@@ -10,12 +63,29 @@ module.exports = class PolicyService {
    * Apply for a policy.
    *
    * @param ctx
-   * @param applyCommand JSON describing the application. Contains client data, contract data, parcel data.
+   * @param data
    *
    */
-  applyForPolicy (ctx, applyCommand) {
+  async applyForPolicy (ctx, data) {
 
-    ctx.ok({applicationId: 5})
+    const customer = await this.gif.customer.create({
+      firstname: data.client.firstname,
+      lastname: data.client.lastname,
+      email: data.client.contact_email
+    })
+
+    const bpKey = await this.gif.bp.create({customerId: customer.customerId})
+    const nd = this.normalize(data)
+    const tx = await this.gif.contract.send('BeaconProduct', 'applyForPolicy', ['0x' + bpKey.bpExternalKey, nd])
+
+    if (tx.error) {
+      ctx.throw(400, tx.error)
+    } else {
+      ctx.ok({
+        applicationId: parseInt(tx.events.NewApplication.returnValues._applicationId._hex, 16),
+        tx
+      })
+    }
 
   }
 
