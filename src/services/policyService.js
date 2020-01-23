@@ -12,7 +12,6 @@ module.exports = class PolicyService {
   }
 
   typeId (peril) {
-    console.log(peril)
     const perils = ['hailstorms', 'fire', 'drought', 'flood']
 
     const ti = perils.findIndex((element) => element === peril.toLowerCase())
@@ -32,7 +31,6 @@ module.exports = class PolicyService {
   }
 
   _normalizeParcel (parcelData) {
-    this.log(parcelData)
     return [
       parcelData.id,
       parcelData.crop_type.name,
@@ -81,6 +79,7 @@ module.exports = class PolicyService {
     if (tx.error) {
       ctx.throw(400, tx.error)
     } else {
+
       ctx.ok({
         applicationId: parseInt(tx.events.NewApplication.returnValues._applicationId._hex, 16),
         tx
@@ -93,12 +92,17 @@ module.exports = class PolicyService {
    * Underwrite a policy.
    *
    * @param ctx
-   * @param underwriteCommand JSON describing the underwrite Command. Contains application ID
+   * @param data
    */
-  underwritePolicy (ctx, underwriteCommand) {
+  async underwritePolicy (ctx, data) {
 
-    ctx.ok({policyId: 5})
-
+    const tx = await this.gif.contract.send('BeaconProduct', 'underwritePolicy', [data.applicationId])
+    if (tx.error) {
+      ctx.throw(400, tx.error)
+    } else {
+      const policyId = tx.events.NewPolicy.returnValues._policyId
+      ctx.ok({policyId})
+    }
   }
 
   /**
@@ -106,7 +110,7 @@ module.exports = class PolicyService {
    * @param ctx
    * @param createClaimCommand
    */
-  createClaim (ctx, createClaimCommand) {
+  async createClaim (ctx, createClaimCommand) {
 
     ctx.ok({claimId: 5})
 
@@ -117,7 +121,7 @@ module.exports = class PolicyService {
    * @param ctx
    * @param confirmClaimCommand
    */
-  confirmClaim (ctx, confirmClaimCommand) {
+  async confirmClaim (ctx, confirmClaimCommand) {
 
     ctx.ok({payoutId: 5})
 
