@@ -101,7 +101,10 @@ module.exports = class PolicyService {
       ctx.throw(400, tx.error)
     } else {
       const policyId = tx.events.NewPolicy.returnValues._policyId
-      ctx.ok({policyId})
+      ctx.ok({
+        policyId,
+        tx
+      })
     }
   }
 
