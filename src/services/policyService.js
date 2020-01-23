@@ -81,7 +81,7 @@ module.exports = class PolicyService {
     } else {
 
       ctx.ok({
-        applicationId: parseInt(tx.events.NewApplication.returnValues._applicationId._hex, 16),
+        applicationId: parseInt(tx.events.NewApplication.returnValues._applicationId),
         tx
       })
     }
