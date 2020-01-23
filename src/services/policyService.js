@@ -96,7 +96,7 @@ module.exports = class PolicyService {
    */
   async underwritePolicy (ctx, data) {
 
-    const tx = await this.gif.contract.send('BeaconProduct', 'underwritePolicy', [data.applicationId])
+    const tx = await this.gif.contract.send('BeaconProduct', 'underwriteApplication', [data.applicationId])
     if (tx.error) {
       ctx.throw(400, tx.error)
     } else {
