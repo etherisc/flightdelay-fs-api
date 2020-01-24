@@ -1,8 +1,7 @@
 
 module.exports = class PolicyService {
-  constructor ({ config, policyRepo }) {
+  constructor ({ config }) {
 
-    this.policyRepo = policyRepo // TODO: is this still needed?
     this.gif = config.gif
     this.log = console.log
 
@@ -78,7 +77,6 @@ module.exports = class PolicyService {
 
     const bpKey = await this.gif.bp.create({customerId: customer.customerId, data})
     const normData = this.normalize(bpKey.bpExternalKey, data)
-    console.log('NormData:', normData)
     const tx = await this.gif.contract.send('BeaconProduct', 'applyForPolicy', normData)
 
     if (tx.error) {
@@ -125,11 +123,9 @@ module.exports = class PolicyService {
       for (let index = 0; index < beaconContractData.parcelCount; index++) {
         let parcelId = await this.gif.contract.call('BeaconProduct', 'beaconParcelsIds', [bpKey, index])
         parcelId = parseInt(parcelId[''])
-        console.log('ParcelId: ', parcelId)
         let parcel = await this.gif.contract.call('BeaconProduct', 'beaconParcels', [bpKey, parcelId])
         parcel.risks = []
         const riskCount = parseInt(parcel.riskCount)
-        console.log('RiskCount: ', riskCount)
         for (let index2 = 0; index2 < riskCount; index2++) {
           parcel.risks.push(await this.gif.contract.call('BeaconProduct', 'beaconRisks', [bpKey, parcelId, index2]))
         }
