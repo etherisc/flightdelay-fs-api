@@ -6,8 +6,8 @@ module.exports = class PolicyService {
     this.gif = config.gif
     this.log = console.log
 
-    this.normalizeParcel = this._normalizeParcel.bind(this)
-    this.normalizeRisk = this._normalizeRisk.bind(this)
+    this.normalizeParcels = this._normalizeParcels.bind(this)
+    this.normalizeRisks = this._normalizeRisks.bind(this)
 
   }
 
@@ -19,18 +19,17 @@ module.exports = class PolicyService {
     return ti
   }
 
-  _normalizeRisk (riskData) {
-    return [
+  _normalizeRisks (parcelData) {
+    return parcelData.risks.map(riskData => [
       this.typeId(riskData.type),
       riskData.threshold1 * 100,
       riskData.amount1 * 100,
       riskData.threshold2 * 100,
-      riskData.amount2 * 100,
-      riskData.parcel_id
-    ]
+      riskData.amount2 * 100
+    ])
   }
 
-  _normalizeParcel (parcelData) {
+  _normalizeParcels (parcelData) {
     return [
       parcelData.id,
       parcelData.crop_type.name,
@@ -38,21 +37,26 @@ module.exports = class PolicyService {
       new Date(parcelData.harvesting_date).getTime() / 1000,
       parcelData.area * 1000,
       parcelData.county.id,
-      parcelData.risks.map(this.normalizeRisk)
+      parcelData.risks.length
     ]
   }
 
-  normalize (data) {
+  normalize (bpKey, data) {
 
     return [
-      data.contract_id,
-      data.client.id,
-      new Date(data.contract_start).getTime() / 1000,
-      new Date(data.contract_end).getTime() / 1000,
-      data.contract_duration,
-      data.insured_area * 1000,
-      data.insured_value * 100,
-      data.parcels.map(this.normalizeParcel)
+      bpKey,
+      [
+        data.contract_id,
+        data.client.id,
+        new Date(data.contract_start).getTime() / 1000,
+        new Date(data.contract_end).getTime() / 1000,
+        data.contract_duration,
+        data.insured_value * 100,
+        data.insured_area * 1000,
+        data.parcels.length
+      ],
+      data.parcels.map(this.normalizeParcels),
+      data.parcels.map(this.normalizeRisks)
     ]
 
   }
@@ -72,9 +76,10 @@ module.exports = class PolicyService {
       email: data.client.contact_email
     })
 
-    const bpKey = await this.gif.bp.create({customerId: customer.customerId})
-    const nd = this.normalize(data)
-    const tx = await this.gif.contract.send('BeaconProduct', 'applyForPolicy', ['0x' + bpKey.bpExternalKey, nd])
+    const bpKey = await this.gif.bp.create({customerId: customer.customerId, data})
+    const normData = this.normalize(bpKey.bpExternalKey, data)
+    console.log('NormData:', normData)
+    const tx = await this.gif.contract.send('BeaconProduct', 'applyForPolicy', normData)
 
     if (tx.error) {
       ctx.throw(400, tx.error)
@@ -108,25 +113,37 @@ module.exports = class PolicyService {
     }
   }
 
-  /**
-   *
-   * @param ctx
-   * @param createClaimCommand
-   */
-  async createClaim (ctx, createClaimCommand) {
+  async getPolicyById (ctx, data) {
+    try {
 
-    ctx.ok({claimId: 5})
+      const policyData = await this.gif.policy.getById(data.policyId)
+      const bpData = await this.gif.bp.getById(policyData.metadataId)
+      const bpKey = bpData.key
+      let beaconContractData = await this.gif.contract.call('BeaconProduct', 'beaconContracts', [bpKey])
 
-  }
+      beaconContractData.parcels = []
+      for (let index = 0; index < beaconContractData.parcelCount; index++) {
+        let parcelId = await this.gif.contract.call('BeaconProduct', 'beaconParcelsIds', [bpKey, index])
+        parcelId = parseInt(parcelId[''])
+        console.log('ParcelId: ', parcelId)
+        let parcel = await this.gif.contract.call('BeaconProduct', 'beaconParcels', [bpKey, parcelId])
+        parcel.risks = []
+        const riskCount = parseInt(parcel.riskCount)
+        console.log('RiskCount: ', riskCount)
+        for (let index2 = 0; index2 < riskCount; index2++) {
+          parcel.risks.push(await this.gif.contract.call('BeaconProduct', 'beaconRisks', [bpKey, parcelId, index2]))
+        }
+        beaconContractData.parcels.push(parcel)
+      }
 
-  /**
-   *
-   * @param ctx
-   * @param confirmClaimCommand
-   */
-  async confirmClaim (ctx, confirmClaimCommand) {
-
-    ctx.ok({payoutId: 5})
+      ctx.ok({
+        policyData,
+        bpData,
+        beaconContractData
+      })
+    } catch (e) {
+      ctx.throw(400, e.message)
+    }
 
   }
 

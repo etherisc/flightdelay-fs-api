@@ -1,14 +1,12 @@
 
-const {contractSchema, applyForPolicySchema, underwritePolicySchema, createClaimSchema, confirmClaimSchema} = require('../schemas/policySchemas')
-const {authSchema} = require('../schemas/authSchema')
-const {monitoringDataSchema} = require('./monitoringDataSchema')
+const policySchemas = require('../schemas/policySchemas')
+const authSchemas = require('../schemas/authSchema')
+const monitoringDataSchemas = require('./monitoringDataSchema')
 
 module.exports = {
-  contractSchema,
-  applyForPolicySchema,
-  underwritePolicySchema,
-  createClaimSchema,
-  confirmClaimSchema,
-  authSchema,
-  monitoringDataSchema
+
+  ...authSchemas,
+  ...policySchemas,
+  ...monitoringDataSchemas
+
 }

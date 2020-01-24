@@ -421,6 +421,17 @@ module.exports = {
       } },
     'required': ['claimId'],
     'additionalProperties': false
+  },
+
+  getPolicyByIdSchema: {
+    '$id': '#getPolicyByIdSchema',
+    'type': 'object',
+    'properties': {
+      'policyId': {
+        'type': 'integer'
+      } },
+    'required': ['policyId'],
+    'additionalProperties': false
   }
 
 }
