@@ -137,7 +137,7 @@ module.exports = class PolicyService {
 
   }
 
-  async declinePolicy (ctx, data) {
+  async declineApplication (ctx, data) {
 
     try {
       const tx = this.gif.contract.send('BeaconProduct', 'declineApplication', [data.applicationId])
@@ -158,7 +158,7 @@ module.exports = class PolicyService {
   async expirePolicy (ctx, data) {
 
     try {
-      const tx = this.gif.contract.send('BeaconProduct', 'expirePolicy', [data.policyId])
+      const tx = this.gif.contract.send('BeaconProduct', 'expire', [data.policyId])
       if (tx.error) {
         ctx.throw(400, tx.error)
       } else {
