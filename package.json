@@ -12,6 +12,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "NODE_ENV=development NO_BOT=true nodemon src/index.js",
+    "dev-bot": "NODE_ENV=development nodemon src/index.js",
     "lint": "eslint src/",
     "migrate": "knex migrate:latest",
     "make-migration": "knex migrate:make",

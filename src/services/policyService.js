@@ -119,9 +119,12 @@ module.exports = class PolicyService {
         parcelId = parseInt(parcelId[''])
         let parcel = await this.gif.contract.call('BeaconProduct', 'beaconParcels', [bpKey, parcelId])
         parcel.risks = []
-        const riskCount = parseInt(parcel.riskCount)
-        for (let index2 = 0; index2 < riskCount; index2++) {
-          parcel.risks.push(await this.gif.contract.call('BeaconProduct', 'beaconRisks', [bpKey, parcelId, index2]))
+        for (let index2 = 0; index2 < 4; index2++) {
+          const risk = await this.gif.contract.call('BeaconProduct', 'beaconRisks', [bpKey, parcelId, index2])
+          console.log(risk)
+          if (risk.threshold1 > 0 || risk.threshold2 > 0) {
+            parcel.risks.push(risk)
+          }
         }
         beaconContractData.parcels.push(parcel)
       }
