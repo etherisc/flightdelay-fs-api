@@ -1,4 +1,6 @@
 
+const { stringToPeril, SCALEFACTOR } = require('./constants')
+
 module.exports = class PolicyService {
   constructor ({ config }) {
 
@@ -10,17 +12,9 @@ module.exports = class PolicyService {
 
   }
 
-  typeId (peril) {
-    const perils = ['hailstorms', 'fire', 'drought', 'flood']
-
-    const ti = perils.findIndex((element) => element === peril.toLowerCase())
-    if (ti < 0) throw new Error('Peril "' + peril + '" not allowed')
-    return ti
-  }
-
   _normalizeRisks (parcelData) {
     return parcelData.risks.map(riskData => [
-      this.typeId(riskData.type),
+      stringToPeril(riskData.type),
       riskData.threshold1 * 100,
       riskData.amount1 * 100,
       riskData.threshold2 * 100,
@@ -50,8 +44,8 @@ module.exports = class PolicyService {
         new Date(data.contract_start).getTime() / 1000,
         new Date(data.contract_end).getTime() / 1000,
         data.contract_duration,
-        data.insured_value * 100,
-        data.insured_area * 1000,
+        data.insured_value * SCALEFACTOR,
+        data.insured_area * SCALEFACTOR,
         data.parcels.length
       ],
       data.parcels.map(this.normalizeParcels),
@@ -137,6 +131,42 @@ module.exports = class PolicyService {
         bpData,
         beaconContractData
       })
+    } catch (e) {
+      ctx.throw(400, e.message)
+    }
+
+  }
+
+  async declinePolicy (ctx, data) {
+
+    try {
+      const tx = this.gif.contract.send('BeaconProduct', 'declineApplication', [data.applicationId])
+      if (tx.error) {
+        ctx.throw(400, tx.error)
+      } else {
+        ctx.ok({
+          applicationId: data.applicationId,
+          tx
+        })
+      }
+    } catch (e) {
+      ctx.throw(400, e.message)
+    }
+
+  }
+
+  async expirePolicy (ctx, data) {
+
+    try {
+      const tx = this.gif.contract.send('BeaconProduct', 'expirePolicy', [data.policyId])
+      if (tx.error) {
+        ctx.throw(400, tx.error)
+      } else {
+        ctx.ok({
+          policyId: data.policyId,
+          tx
+        })
+      }
     } catch (e) {
       ctx.throw(400, e.message)
     }

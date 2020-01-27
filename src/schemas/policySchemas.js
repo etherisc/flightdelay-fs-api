@@ -401,6 +401,28 @@ module.exports = {
     'additionalProperties': false
   },
 
+  declineApplicationSchema: {
+    '$id': '#declineApplicationSchema',
+    'type': 'object',
+    'properties': {
+      'applicationId': {
+        'type': 'integer'
+      } },
+    'required': ['applicationId'],
+    'additionalProperties': false
+  },
+
+  expirePolicySchema: {
+    '$id': '#expirePolicySchema',
+    'type': 'object',
+    'properties': {
+      'policyId': {
+        'type': 'integer'
+      } },
+    'required': ['policyId'],
+    'additionalProperties': false
+  },
+
   createClaimSchema: {
     '$id': '#createClaimSchema',
     'type': 'object',
