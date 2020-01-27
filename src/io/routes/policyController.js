@@ -11,5 +11,6 @@ module.exports = ({ routerCommand, schemas, policyService }) => {
   routerCommand.post('/policies/expire', schemas.expirePolicySchema, policyService, 'expirePolicy')
   routerCommand.post('/policies/create_claim', schemas.createClaimSchema, policyService, 'createClaim')
   routerCommand.post('/policies/confirm_claim', schemas.confirmClaimSchema, policyService, 'confirmClaim')
+  routerCommand.get('/policies/debug', schemas.debugPolicySchema, policyService, 'debugPolicy')
 
 }

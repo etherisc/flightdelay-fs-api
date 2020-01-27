@@ -454,6 +454,11 @@ module.exports = {
       } },
     'required': ['policyId'],
     'additionalProperties': false
+  },
+
+  debugPolicySchema: {
+    '$id': '#debugPolicySchema',
+    'type': 'object'
   }
 
 }

@@ -15,10 +15,10 @@ module.exports = class PolicyService {
   _normalizeRisks (parcelData) {
     return parcelData.risks.map(riskData => [
       stringToPeril(riskData.type),
-      riskData.threshold1 * 100,
-      riskData.amount1 * 100,
-      riskData.threshold2 * 100,
-      riskData.amount2 * 100
+      riskData.threshold1 * SCALEFACTOR,
+      riskData.amount1 * SCALEFACTOR,
+      riskData.threshold2 * SCALEFACTOR,
+      riskData.amount2 * SCALEFACTOR
     ])
   }
 
@@ -28,7 +28,7 @@ module.exports = class PolicyService {
       parcelData.crop_type.name,
       new Date(parcelData.sowing_date).getTime() / 1000,
       new Date(parcelData.harvesting_date).getTime() / 1000,
-      parcelData.area * 1000,
+      parcelData.area * SCALEFACTOR,
       parcelData.county.id,
       parcelData.risks.length
     ]
@@ -167,6 +167,22 @@ module.exports = class PolicyService {
           tx
         })
       }
+    } catch (e) {
+      ctx.throw(400, e.message)
+    }
+
+  }
+
+  async debugPolicy (ctx, data) {
+    try {
+
+      console.log('Debug!')
+      const method = data.method
+      const args = data.args
+
+      const tx = await this.gif.contract.call('BeaconProduct', method, args)
+
+      ctx.ok({tx})
     } catch (e) {
       ctx.throw(400, e.message)
     }
