@@ -16,6 +16,18 @@ module.exports = {
           1
         ]
       },
+      'origin': {
+        '$id': '#/properties/origin',
+        'type': 'string',
+        'enum': ['system', 'user'],
+        'examples': [
+          'system'
+        ]
+      },
+      'monitoring_date': {
+        '$id': '#/properties/parcels/items/properties/monitoring_date',
+        'type': 'integer'
+      },
       'insurer': {
         '$id': '#/properties/insurer',
         'type': 'object',
