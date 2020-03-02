@@ -423,8 +423,8 @@ module.exports = {
     'additionalProperties': false
   },
 
-  createClaimSchema: {
-    '$id': '#createClaimSchema',
+  getClaimsSchema: {
+    '$id': '#getClaimsSchema',
     'type': 'object',
     'properties': {
       'policyId': {
@@ -436,6 +436,20 @@ module.exports = {
 
   confirmClaimSchema: {
     '$id': '#confirmClaimSchema',
+    'type': 'object',
+    'properties': {
+      'claimId': {
+        'type': 'integer'
+      },
+      'amount': {
+        'type': 'integer'
+      } },
+    'required': ['claimId', 'amount'],
+    'additionalProperties': false
+  },
+
+  declineClaimSchema: {
+    '$id': '#declineClaimSchema',
     'type': 'object',
     'properties': {
       'claimId': {
