@@ -121,7 +121,6 @@ module.exports = class PolicyService {
         parcel.risks = []
         for (let index2 = 0; index2 < 4; index2++) {
           const risk = await this.gif.contract.call('BeaconProduct', 'beaconRisks', [bpKey, parcelId, index2])
-          console.log(risk)
           if (risk.threshold1 > 0 || risk.threshold2 > 0) {
             parcel.risks.push(risk)
           }
@@ -179,13 +178,90 @@ module.exports = class PolicyService {
   async debugPolicy (ctx, data) {
     try {
 
-      console.log('Debug!')
       const method = data.method
       const args = data.args
 
       const tx = await this.gif.contract.call('BeaconProduct', method, args)
 
       ctx.ok({tx})
+
+    } catch (e) {
+      ctx.throw(400, e.message)
+    }
+
+  }
+
+  async getClaims (ctx, data) {
+    try {
+
+      let claims = []
+      let res = await this.gif.contract.call('BeaconProduct', 'getClaimsCount', [data.policyId])
+      const claimsCount = parseInt(res._claimsCount)
+
+      for (let count = 0; count < claimsCount; count++) {
+        res = await this.gif.contract.call('BeaconProduct', 'BeaconClaims', [data.policyId, count])
+        const claimId = parseInt(res['claimId'])
+        let affectedParcels = []
+        for (let pcount = 0; pcount < parseInt(res.affectedParcelsCount); pcount++) {
+          affectedParcels.push(await this.gif.contract.call('BeaconProduct', 'getAffectedParcels', [data.policyId, claimId, pcount]))
+        }
+        const claim = Object.assign({},
+          await this.gif.claim.getById(claimId),
+          {
+            totalAmount: parseInt(res.totalAmount),
+            payoutAmount: parseInt(res.payoutAmount),
+            affectedParcels,
+            affectedParcelsCount: parseInt(res.affectedParcelsCount)
+          }
+        )
+
+        delete claim.contractKey
+        delete claim.stateMessage
+        delete claim.data
+
+        claims.push(claim)
+      }
+
+      ctx.ok({claims})
+
+    } catch (e) {
+      ctx.throw(400, e.message)
+    }
+
+  }
+
+  async confirmClaim (ctx, data) {
+    try {
+
+      const tx = await this.gif.contract.send('BeaconProduct', 'confirmClaim', [data.claimId, data.amount])
+      if (tx.error) {
+        ctx.throw(400, tx.error)
+      } else {
+        ctx.ok({
+          claimId: data.claimId,
+          tx
+        })
+      }
+
+    } catch (e) {
+      ctx.throw(400, e.message)
+    }
+
+  }
+
+  async declineClaim (ctx, data) {
+    try {
+
+      const tx = await this.gif.contract.send('BeaconProduct', 'declineClaim', [data.claimId])
+      if (tx.error) {
+        ctx.throw(400, tx.error)
+      } else {
+        ctx.ok({
+          claimId: data.claimId,
+          tx
+        })
+      }
+
     } catch (e) {
       ctx.throw(400, e.message)
     }
