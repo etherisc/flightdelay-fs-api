@@ -4,13 +4,13 @@ module.exports = {
     '$id': '#data',
     'type': 'object',
     'required': [
-      'contract_id',
+      'policy_id',
       'insurer',
       'parcels'
     ],
     'properties': {
-      'contract_id': {
-        '$id': '#/properties/contract_id',
+      'policy_id': {
+        '$id': '#/properties/policy_id',
         'type': 'integer',
         'examples': [
           1

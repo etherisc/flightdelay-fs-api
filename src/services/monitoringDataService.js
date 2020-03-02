@@ -68,7 +68,7 @@ module.exports = class MonitoringDataService {
   normalize (ctx, data) {
 
     return [
-      data.contract_id,
+      data.policy_id,
       this.convertOrigin(data),
       this.convertMonitoringDate(ctx, data),
       data.parcels.map(this.normalizeParcelData)
