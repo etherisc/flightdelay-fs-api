@@ -10,6 +10,11 @@ const perils = [
   'flood'
 ]
 
+const origins = [
+  'system',
+  'user'
+]
+
 const SCALEFACTOR = 1000
 
 const perilToString = peril => perils[peril]
@@ -21,6 +26,8 @@ const stringToPeril = peril => {
 
 }
 
+const originToString = origin => origins[origin]
+
 module.exports = {
   PERIL_HAILSTORM,
   PERIL_FIRE,
@@ -28,5 +35,6 @@ module.exports = {
   PERIL_FLOOD,
   perilToString,
   stringToPeril,
+  originToString,
   SCALEFACTOR
 }

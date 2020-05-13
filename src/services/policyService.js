@@ -1,5 +1,5 @@
 
-const { stringToPeril, perilToString, SCALEFACTOR } = require('./constants')
+const { stringToPeril, perilToString, originToString, SCALEFACTOR } = require('./constants')
 
 module.exports = class PolicyService {
   constructor ({ config }) {
@@ -217,7 +217,7 @@ module.exports = class PolicyService {
         let affectedParcels = []
         for (let pcount = 0; pcount < parseInt(res.affectedParcelsCount); pcount++) {
           let parcelData = await this.gif.contract.call('BeaconProduct', 'getAffectedParcels', [data.policyId, claimId, pcount])
-          let bpKey = await (this.gif.contract.call('BeaconProduct', 'policyIdToBpKey', [data.policyId]))['']
+          let bpKey = (await this.gif.contract.call('BeaconProduct', 'policyIdToBpKey', [data.policyId]))['']
           let monitoringData = []
           for (let typeIndex = 0; typeIndex < 4; typeIndex++) {
             monitoringData[perilToString(typeIndex)] =
@@ -227,7 +227,7 @@ module.exports = class PolicyService {
                 [timestamp, bpKey, parcelData._parcelId, typeIndex]
               ))['']) / SCALEFACTOR
           }
-          const origin = await this.gif.contract.call('BeaconProduct', 'origin', [timestamp, bpKey])
+          const origin = originToString((await this.gif.contract.call('BeaconProduct', 'origin', [timestamp, bpKey]))[''])
           affectedParcels.push({parcelId: parcelData._parcelId, ...monitoringData, origin})
         }
         const claim = Object.assign({},
