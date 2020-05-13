@@ -1,5 +1,5 @@
 
-const { stringToPeril, SCALEFACTOR } = require('./constants')
+const { stringToPeril, perilToString, SCALEFACTOR } = require('./constants')
 
 module.exports = class PolicyService {
   constructor ({ config }) {
@@ -30,6 +30,7 @@ module.exports = class PolicyService {
       new Date(parcelData.harvesting_date).getTime() / 1000,
       parcelData.area * SCALEFACTOR,
       parcelData.county.id,
+      parcelData.insured_value * SCALEFACTOR,
       parcelData.risks.length
     ]
   }
@@ -69,8 +70,14 @@ module.exports = class PolicyService {
       email: data.client.contact_email
     })
 
-    const bpKey = await this.gif.bp.create({customerId: customer.customerId, data})
-    const normData = this.normalize(bpKey.bpExternalKey, data)
+    let bpKey
+    let normData
+    try {
+      bpKey = await this.gif.bp.create({customerId: customer.customerId, data})
+      normData = this.normalize(bpKey.bpExternalKey, data)
+    } catch (e) {
+      ctx.throw(400, e.message)
+    }
     const tx = await this.gif.contract.send('BeaconProduct', 'applyForPolicy', normData)
 
     if (tx.error) {
@@ -109,6 +116,11 @@ module.exports = class PolicyService {
     try {
 
       const policyData = await this.gif.policy.getById(data.policyId)
+      if (policyData.error) {
+        ctx.throw(400, policyData.error)
+        return
+      }
+
       const bpData = await this.gif.bp.getById(policyData.metadataId)
       const bpKey = bpData.key
       let beaconContractData = await this.gif.contract.call('BeaconProduct', 'beaconContracts', [bpKey])
@@ -200,18 +212,31 @@ module.exports = class PolicyService {
 
       for (let count = 0; count < claimsCount; count++) {
         res = await this.gif.contract.call('BeaconProduct', 'BeaconClaims', [data.policyId, count])
-        const claimId = parseInt(res['claimId'])
+        const timestamp = parseInt(res.timestamp)
+        const claimId = parseInt(res.claimId)
         let affectedParcels = []
         for (let pcount = 0; pcount < parseInt(res.affectedParcelsCount); pcount++) {
-          affectedParcels.push(await this.gif.contract.call('BeaconProduct', 'getAffectedParcels', [data.policyId, claimId, pcount]))
+          let parcelData = await this.gif.contract.call('BeaconProduct', 'getAffectedParcels', [data.policyId, claimId, pcount])
+          let bpKey = await this.gif.contract.call('BeaconProduct', 'policyIdToBpKey', [data.policyId])
+          let monitoringData = []
+          for (let typeIndex = 0; typeIndex < 4; typeIndex++) {
+            monitoringData[perilToString(typeIndex)] =
+              parseInt((await this.gif.contract.call(
+                'BeaconProduct',
+                'monitoringData',
+                [timestamp, bpKey[''], parcelData._parcelId, typeIndex]
+              ))['']) / SCALEFACTOR
+          }
+          affectedParcels.push({parcelId: parcelData._parcelId, ...monitoringData})
         }
         const claim = Object.assign({},
           await this.gif.claim.getById(claimId),
           {
-            totalAmount: parseInt(res.totalAmount),
+            totalAmount: parseInt(res.totalAmount) / (SCALEFACTOR * SCALEFACTOR),
             payoutAmount: parseInt(res.payoutAmount),
             affectedParcels,
-            affectedParcelsCount: parseInt(res.affectedParcelsCount)
+            affectedParcelsCount: parseInt(res.affectedParcelsCount),
+            timestamp: parseInt(res.timestamp)
           }
         )
 

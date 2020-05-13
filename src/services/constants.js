@@ -4,7 +4,7 @@ const PERIL_FIRE = 1
 const PERIL_DROUGHT = 2
 const PERIL_FLOOD = 3
 const perils = [
-  'hailstorms',
+  'hailstorm',
   'fire',
   'drought',
   'flood'
