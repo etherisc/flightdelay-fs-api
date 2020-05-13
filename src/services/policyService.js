@@ -217,17 +217,18 @@ module.exports = class PolicyService {
         let affectedParcels = []
         for (let pcount = 0; pcount < parseInt(res.affectedParcelsCount); pcount++) {
           let parcelData = await this.gif.contract.call('BeaconProduct', 'getAffectedParcels', [data.policyId, claimId, pcount])
-          let bpKey = await this.gif.contract.call('BeaconProduct', 'policyIdToBpKey', [data.policyId])
+          let bpKey = await (this.gif.contract.call('BeaconProduct', 'policyIdToBpKey', [data.policyId]))['']
           let monitoringData = []
           for (let typeIndex = 0; typeIndex < 4; typeIndex++) {
             monitoringData[perilToString(typeIndex)] =
               parseInt((await this.gif.contract.call(
                 'BeaconProduct',
                 'monitoringData',
-                [timestamp, bpKey[''], parcelData._parcelId, typeIndex]
+                [timestamp, bpKey, parcelData._parcelId, typeIndex]
               ))['']) / SCALEFACTOR
           }
-          affectedParcels.push({parcelId: parcelData._parcelId, ...monitoringData})
+          const origin = await this.gif.contract.call('BeaconProduct', 'origin', [timestamp, bpKey])
+          affectedParcels.push({parcelId: parcelData._parcelId, ...monitoringData, origin})
         }
         const claim = Object.assign({},
           await this.gif.claim.getById(claimId),
