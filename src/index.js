@@ -21,6 +21,8 @@ const schemas = require('./schemas/module')
 const TelegramLogger = require('./io/telegram/telegramLogger')
 const GIF = require('@etherisc/gifcli')
 
+const noAuth = [/\/auth/, /\/health-check/, /\/version/]
+
 async function runServer () {
 
   const gif = await GIF.connect()
@@ -50,7 +52,7 @@ async function runServer () {
     .use(new BodyParser())
     .use(new Respond())
     .use(unhandledExceptionHandler)
-    .use(JWT({ secret: config.JWT_SECRET }).unless({path: /\/auth/}))
+    .use(JWT({ secret: config.JWT_SECRET }).unless({path: noAuth}))
     .use(router.routes())
     .use(router.allowedMethods())
 
