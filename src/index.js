@@ -51,10 +51,10 @@ async function runServer () {
     .use(new Cors())
     .use(new BodyParser())
     .use(new Respond())
-    .use(unhandledExceptionHandler)
     .use(JWT({ secret: config.JWT_SECRET }).unless({path: noAuth}))
     .use(router.routes())
     .use(router.allowedMethods())
+    .use(unhandledExceptionHandler)
 
   app.on('error', err => console.error('Server Error', err))
 
