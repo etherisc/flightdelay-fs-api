@@ -10,6 +10,7 @@ module.exports = class FlightStatsService {
    */
 
   constructor ({ config, telegramBot }) {
+
     this.config = config
     this.tg = telegramBot
     this.appId = config.APP_ID
@@ -21,33 +22,31 @@ module.exports = class FlightStatsService {
 
   }
 
-  async getStatus (ctx, data) {
-    const { carrier, flightNumber, departure } = data
-    this.tg.send(`Get Status: ${JSON.stringify(data)}`)
-    const apiURL = `${this.flightStatsBaseURL}${this.flightStatusEndpoint}/${carrier}/${flightNumber}/departing/${departure}?appId=${this.appId}&appKey=${this.appKey}`
-    const response = await fetch(apiURL)
+  async getFlightStats (ctx, endpoint) {
+    const response = await fetch(endpoint)
     const json = await response.json()
-    this.tg.send(`Get Status: \n ${apiURL} \n${JSON.stringify(json)}`)
 
     if (json.error) {
+      this.tg.send(`Error: ${JSON.stringify(json.error)}`)
       ctx.badRequest(json.error)
     } else {
+      this.tg.send(`Success: ${JSON.stringify(json)}`)
       ctx.ok(json)
     }
   }
 
-  async getRatings (ctx, data) {
-    const { carrier, flightNumber } = data
+  async getStatus (ctx, data) {
     this.tg.send(`Get Status: ${JSON.stringify(data)}`)
-    const apiURL = `${this.flightStatsBaseURL}${this.flightRatingsEndpoint}/${carrier}/${flightNumber}?appId=${this.appId}&appKey=${this.appKey}`
-    const response = await fetch(apiURL)
-    const json = await response.json()
-    if (json.error) {
-      ctx.badRequest(json.error)
-    } else {
-      ctx.ok(json)
-    }
+    const { carrier, flightNumber, departure } = data
+    const endpoint = `${this.flightStatsBaseURL}${this.flightStatusEndpoint}/${carrier}/${flightNumber}/departing/${departure}?appId=${this.appId}&appKey=${this.appKey}`
+    await this.getFlightStats(ctx, endpoint)
+  }
 
+  async getRatings (ctx, data) {
+    this.tg.send(`Get Ratings: ${JSON.stringify(data)}`)
+    const { carrier, flightNumber } = data
+    const endpoint = `${this.flightStatsBaseURL}${this.flightRatingsEndpoint}/${carrier}/${flightNumber}?appId=${this.appId}&appKey=${this.appKey}`
+    await this.getFlightStats(ctx, endpoint)
   }
 
 }
