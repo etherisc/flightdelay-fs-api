@@ -1,14 +1,8 @@
 
-const policySchemas = require('../schemas/policySchemas')
-const authSchemas = require('../schemas/authSchema')
-const monitoringDataSchemas = require('./monitoringDataSchema')
-const auditSchemas = require('./auditSchemas')
+const flightStatsSchemas = require('./flightStatsSchemas')
 
 module.exports = {
 
-  ...authSchemas,
-  ...policySchemas,
-  ...monitoringDataSchemas,
-  ...auditSchemas
+  ...flightStatsSchemas
 
 }

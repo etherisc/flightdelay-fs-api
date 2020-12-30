@@ -1,2 +1,1 @@
-# BEACON REST API
-
+# Flightstats API wrapper

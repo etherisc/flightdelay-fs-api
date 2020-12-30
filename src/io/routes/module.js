@@ -1,18 +1,12 @@
-const policyController = require('./policyController')
 const versionController = require('./versionController')
-const authController = require('./authController')
-const monitoringDataController = require('./monitoringDataController')
-const auditController = require('./auditController')
+const flightStatsController = require('./flightStatsController')
 
-module.exports = ({ routerCommand, router, config, serviceDeps, schemas, ioDeps, modelDeps }) => {
+module.exports = ({ routerCommand, router, config, serviceDeps, schemas, ioDeps }) => {
 
-  const controllerDeps = { routerCommand, router, config, schemas, ...serviceDeps, ...ioDeps, ...modelDeps }
+  const controllerDeps = { routerCommand, router, config, schemas, ...serviceDeps, ...ioDeps }
 
   versionController(controllerDeps)
-  policyController(controllerDeps)
-  authController(controllerDeps)
-  monitoringDataController(controllerDeps)
-  auditController(controllerDeps)
+  flightStatsController(controllerDeps)
 
   router.get(config.API_VERSION + '/health-check', async (ctx) => ctx.ok('OK'))
 }

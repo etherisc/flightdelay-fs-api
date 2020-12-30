@@ -1,15 +1,13 @@
 const TB = require('node-telegram-bot-api')
-const token = '1013319375:AAFkhhwe84QrFYbfLZjy21g5IXxnuLOC6YE'
 
 /**
  * Wrapper for Telegram Bot.
- * @type {TelegramBot}
  */
 module.exports = class TelegramLogger {
 
-  constructor () {
+  constructor ({ config }) {
 
-    this.bot = new TB(token, { polling: true })
+    this.bot = new TB(config.BOT_TOKEN, { polling: true })
 
     this.send = async (message) => {
       if (message && this.chatId) {

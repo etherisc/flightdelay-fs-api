@@ -1,15 +1,18 @@
-// const ethModule = require('./eth/module');
 const Ajv = require('ajv')
 const EventEmitter = require('events')
+const TelegramLogger = require('./telegram/telegramLogger')
 
-module.exports = ({ config /*, knex */}) => {
+module.exports = ({ config }) => {
 
   const ajv = new Ajv()
   const messageBus = new EventEmitter()
+  const telegramBot = new TelegramLogger({ config })
 
-  const systemDeps = {
-    ajv, messageBus
+  const ioDeps = {
+    ajv,
+    messageBus,
+    telegramBot
   }
 
-  return Object.assign({} /*, ethModule({ config, db: knex }) */, systemDeps)
+  return Object.assign({}, ioDeps)
 }
