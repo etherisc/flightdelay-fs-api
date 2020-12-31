@@ -9,11 +9,17 @@ module.exports = {
       'flightNumber': {
         'type': 'string'
       },
-      'departure': {
+      'year': {
+        'type': 'string'
+      },
+      'month': {
+        'type': 'string'
+      },
+      'day': {
         'type': 'string'
       }
     },
-    'required': ['carrier', 'flightNumber', 'departure'],
+    'required': ['carrier', 'flightNumber', 'year', 'month', 'day'],
     'additionalProperties': false
   },
 

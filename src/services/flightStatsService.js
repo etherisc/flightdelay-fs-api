@@ -39,15 +39,15 @@ module.exports = class FlightStatsService {
 
   async getSchedule (ctx, data) {
     this.tg.send(`Get Schedule: ${JSON.stringify(data)}`)
-    const { carrier, flightNumber, departure } = data
-    const endpoint = `${this.flightStatsBaseURL}${this.flightScheduleEndpoint}/${carrier}/${flightNumber}/departing/${departure}?appId=${this.appId}&appKey=${this.appKey}`
+    const { carrier, flightNumber, year, month, day } = data
+    const endpoint = `${this.flightStatsBaseURL}${this.flightScheduleEndpoint}/${carrier}/${flightNumber}/departing/${year}/${month}/${day}?appId=${this.appId}&appKey=${this.appKey}`
     await this.getFlightStats(ctx, endpoint)
   }
 
   async getStatus (ctx, data) {
     this.tg.send(`Get Status: ${JSON.stringify(data)}`)
-    const { carrier, flightNumber, departure } = data
-    const endpoint = `${this.flightStatsBaseURL}${this.flightStatusEndpoint}/${carrier}/${flightNumber}/dep/${departure}?appId=${this.appId}&appKey=${this.appKey}`
+    const { carrier, flightNumber, year, month, day } = data
+    const endpoint = `${this.flightStatsBaseURL}${this.flightStatusEndpoint}/${carrier}/${flightNumber}/dep/${year}/${month}/${day}?appId=${this.appId}&appKey=${this.appKey}`
     await this.getFlightStats(ctx, endpoint)
   }
 

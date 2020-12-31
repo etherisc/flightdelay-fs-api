@@ -32,7 +32,7 @@ module.exports = class RouterCommand {
      * 4. Handle command errors
      */
     this.router[method](this.config.API_VERSION + path, async (ctx) => {
-      const data = ctx.request.body
+      const data = ctx.params
       const validate = this.ajv.compile(schema)
 
       if (!validate(data)) {
