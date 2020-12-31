@@ -22,7 +22,8 @@ async function runServer () {
     {},
     dotenv.load().parsed,
     {
-      API_VERSION: '/api/v1'
+      API_VERSION: '/api/v1',
+      NO_BOT: process.env.NO_BOT
     }
   )
 

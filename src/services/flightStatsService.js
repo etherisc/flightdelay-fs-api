@@ -17,7 +17,8 @@ module.exports = class FlightStatsService {
     this.appKey = config.APP_KEY
 
     this.flightStatsBaseURL = 'https://api.flightstats.com'
-    this.flightStatusEndpoint = '/flex/schedules/rest/v1/json/flight'
+    this.flightScheduleEndpoint = '/flex/schedules/rest/v1/json/flight'
+    this.flightStatusEndpoint = '/flex/flightstatus/rest/v2/json/flight/status'
     this.flightRatingsEndpoint = '/flex/ratings/rest/v1/json/flight'
 
   }
@@ -30,15 +31,23 @@ module.exports = class FlightStatsService {
       this.tg.send(`Error: ${JSON.stringify(json.error)}`)
       ctx.badRequest(json.error)
     } else {
-      this.tg.send(`Success: ${JSON.stringify(json)}`)
+      // this.tg.send(`Success: ${JSON.stringify(json)}`)
+      this.tg.send(`Success`)
       ctx.ok(json)
     }
+  }
+
+  async getSchedule (ctx, data) {
+    this.tg.send(`Get Schedule: ${JSON.stringify(data)}`)
+    const { carrier, flightNumber, departure } = data
+    const endpoint = `${this.flightStatsBaseURL}${this.flightScheduleEndpoint}/${carrier}/${flightNumber}/departing/${departure}?appId=${this.appId}&appKey=${this.appKey}`
+    await this.getFlightStats(ctx, endpoint)
   }
 
   async getStatus (ctx, data) {
     this.tg.send(`Get Status: ${JSON.stringify(data)}`)
     const { carrier, flightNumber, departure } = data
-    const endpoint = `${this.flightStatsBaseURL}${this.flightStatusEndpoint}/${carrier}/${flightNumber}/departing/${departure}?appId=${this.appId}&appKey=${this.appKey}`
+    const endpoint = `${this.flightStatsBaseURL}${this.flightStatusEndpoint}/${carrier}/${flightNumber}/dep/${departure}?appId=${this.appId}&appKey=${this.appKey}`
     await this.getFlightStats(ctx, endpoint)
   }
 
