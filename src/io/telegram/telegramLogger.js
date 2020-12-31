@@ -1,4 +1,4 @@
-const TB = require('node-telegram-bot-api')
+const TB = require('tgfancy')
 
 /**
  * Wrapper for Telegram Bot.
@@ -8,7 +8,10 @@ module.exports = class TelegramLogger {
   constructor ({ config }) {
     this.config = config
     if (!config.NO_BOT) {
-      this.bot = new TB(config.BOT_TOKEN, { polling: true })
+      this.bot = new TB(config.BOT_TOKEN, {
+        polling: true,
+        orderedSending: true
+      })
       this.bot.on('message',
         async req => {
           this.chatId = req.chat.id
