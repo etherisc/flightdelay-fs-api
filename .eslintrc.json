@@ -1,7 +1,10 @@
 {
-    "extends": "standard",
-    "rules": {
-        "no-trailing-spaces": "off",
-        "padded-blocks": "off"
-    }
+  "extends": "standard",
+  "env": {
+    "mocha": true
+  },
+  "rules": {
+    "no-trailing-spaces": "off",
+    "padded-blocks": "off"
+  }
 }

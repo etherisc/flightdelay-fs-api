@@ -35,6 +35,23 @@ module.exports = {
     },
     'required': ['carrier', 'flightNumber'],
     'additionalProperties': false
+  },
+
+  'getQuoteSchema': {
+    '$id': '#quote',
+    'properties': {
+      'premium': {
+        'type': 'integer'
+      },
+      'carrier': {
+        'type': 'string'
+      },
+      'flightNumber': {
+        'type': 'string'
+      }
+    },
+    'required': ['premium', 'carrier', 'flightNumber'],
+    'additionalProperties': false
   }
 
 }

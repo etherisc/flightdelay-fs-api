@@ -29,12 +29,14 @@
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
-    "mocha": "^5.0.1",
+    "mocha": "^8.2.1",
     "nodemon": "^1.19.4",
     "replayer": "^2.2.3",
     "sinon": "^4.3.0"
   },
   "dependencies": {
+    "@etherisc/gifcli": "^1.2.9",
+    "@truffle/hdwallet-provider": "^1.2.1",
     "ajv": "^5.4.0",
     "babel-runtime": "^6.26.0",
     "bristol": "^0.4.0",
@@ -58,6 +60,7 @@
     "node-mailer": "^0.1.1",
     "palin": "^2.3.0",
     "pg": "^7.18.2",
+    "should": "^13.2.3",
     "tgfancy": "^0.13.0",
     "uuid": "^3.4.0",
     "verror": "^1.10.0",
