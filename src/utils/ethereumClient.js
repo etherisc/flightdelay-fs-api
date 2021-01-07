@@ -69,9 +69,9 @@ class EthereumClient {
     if (!this.gif) {
       this.gif = await GIF.connect()
     }
-
     const { product, networkName, contractName, methodName, parameters } = content
     let result
+    console.log(content)
 
     try {
 

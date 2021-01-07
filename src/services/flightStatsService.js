@@ -22,7 +22,7 @@ module.exports = class FlightStatsService {
     this.tg = telegramBot
     this.appId = config.APP_ID
     this.appKey = config.APP_KEY
-    this.ethereumClient = new EthereumClient(log)
+    this.ethereumClient = new EthereumClient({ log })
 
     this.flightStatsBaseURL = 'https://api.flightstats.com'
     this.flightScheduleEndpoint = '/flex/schedules/rest/v1/json/flight'
@@ -80,26 +80,29 @@ module.exports = class FlightStatsService {
 
   async getQuote (ctx, data) { // data = { premium, carrier, flightNumber }
     this.tg.send(`Get Quote: ${JSON.stringify(data)}`)
-    const ratings = this.fetchEndpoint(this.getRatingsEndpoint(data))
+    const { ratings } = await this.fetchEndpoint(this.getRatingsEndpoint(data))
+    const rating = ratings[0]
     const { premium } = data
+    console.log(ratings[0], premium)
     const content = {
       product: 'FlightDelaySokol',
       networkName: 'sokol',
       contractName: 'FlightDelayEtheriscOracle',
       methodName: 'calculatePayouts',
       parameters: [
-        premium,
+        parseInt(premium, 10),
         [
-          ratings.observations,
-          ratings.late15,
-          ratings.late30,
-          ratings.late45,
-          ratings.cancelled,
-          ratings.diverted
+          rating.observations,
+          rating.late15,
+          rating.late30,
+          rating.late45,
+          rating.cancelled,
+          rating.diverted
         ]
       ]
     }
     const quote = await this.ethereumClient.callRequest({ content })
+    console.log(quote)
     ctx.ok(quote)
   }
 

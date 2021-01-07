@@ -41,7 +41,7 @@ module.exports = {
     '$id': '#quote',
     'properties': {
       'premium': {
-        'type': 'integer'
+        'type': 'string'
       },
       'carrier': {
         'type': 'string'
