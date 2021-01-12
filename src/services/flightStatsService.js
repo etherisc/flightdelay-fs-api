@@ -1,5 +1,4 @@
 const fetch = require('node-fetch')
-const GIF = require('@etherisc/gifcli')
 
 module.exports = class FlightStatsService {
 
@@ -16,18 +15,13 @@ module.exports = class FlightStatsService {
     this.tg = telegramBot
     this.appId = config.APP_ID
     this.appKey = config.APP_KEY
+    this.gif = config.gif
 
     this.flightStatsBaseURL = 'https://api.flightstats.com'
     this.flightScheduleEndpoint = '/flex/schedules/rest/v1/json/flight'
     this.flightStatusEndpoint = '/flex/flightstatus/rest/v2/json/flight/status'
     this.flightRatingsEndpoint = '/flex/ratings/rest/v1/json/flight'
 
-    this.getQuote().bind(this)
-    this.bootstrap().bind(this)
-  }
-
-  async bootstrap () {
-    this.gif = GIF.connect()
   }
 
   async fetchEndpoint (endpoint) {

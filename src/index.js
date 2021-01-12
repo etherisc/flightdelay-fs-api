@@ -15,6 +15,7 @@ const servicesModule = require('./services/module')
 const routesModule = require('./io/routes/module')
 const RouterCommand = require('./io/routes/routerCommand')
 const schemas = require('./schemas/module')
+const GIF = require('@etherisc/gifcli')
 
 async function runServer () {
 
@@ -26,11 +27,9 @@ async function runServer () {
       NO_BOT: process.env.NO_BOT
     }
   )
-
+  config.gif = await GIF.connect()
   const ioDeps = ioModule({ config })
   const serviceDeps = servicesModule({ config, ioDeps })
-  const { flightStatsService } = serviceDeps
-  await flightStatsService.bootstrap()
 
   const router = new Router()
   const routerCommand = new RouterCommand({router, config, ...ioDeps})
