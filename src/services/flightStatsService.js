@@ -83,7 +83,6 @@ module.exports = class FlightStatsService {
     const { ratings } = await this.fetchEndpoint(this.getRatingsEndpoint(data))
     const rating = ratings[0]
     const { premium } = data
-    console.log(ratings[0], premium)
     const content = {
       product: 'FlightDelaySokol',
       networkName: 'sokol',
@@ -102,7 +101,6 @@ module.exports = class FlightStatsService {
       ]
     }
     const quote = await this.ethereumClient.callRequest({ content })
-    console.log(quote)
     ctx.ok(quote)
   }
 
