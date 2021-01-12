@@ -22,6 +22,8 @@ module.exports = class FlightStatsService {
     this.flightStatusEndpoint = '/flex/flightstatus/rest/v2/json/flight/status'
     this.flightRatingsEndpoint = '/flex/ratings/rest/v1/json/flight'
 
+    this.getQuote().bind(this)
+    this.bootstrap().bind(this)
   }
 
   async bootstrap () {
