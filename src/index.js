@@ -29,6 +29,8 @@ async function runServer () {
 
   const ioDeps = ioModule({ config })
   const serviceDeps = servicesModule({ config, ioDeps })
+  const { flightStatsService } = serviceDeps
+  await flightStatsService.bootstrap()
 
   const router = new Router()
   const routerCommand = new RouterCommand({router, config, ...ioDeps})
