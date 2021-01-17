@@ -1,8 +1,7 @@
 {
   "name": "flighstats-fs-api",
-  "version": "0.1.0",
-  "release": "0.1.0",
-  "description": "",
+  "version": "1.0.0",
+  "description": "FlightStats API ",
   "private": true,
   "main": "index.js",
   "engines": {
