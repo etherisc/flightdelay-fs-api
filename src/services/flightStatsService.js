@@ -76,6 +76,7 @@ module.exports = class FlightStatsService {
     const { ratings } = await this.fetchEndpoint(this.getRatingsEndpoint(data))
     const rating = ratings[0]
     const { premium } = data
+    const product = 'FlightDelaySokol'
     const contractName = 'FlightDelayEtheriscOracle'
     const methodName = 'calculatePayouts'
     const parameters = [
@@ -90,7 +91,7 @@ module.exports = class FlightStatsService {
       ]
     ]
 
-    const quote = await this.gif.contract.call(contractName, methodName, parameters)
+    const quote = (await this.gif.contract.call({product, contractName, methodName, parameters})).data
     await this.tg.send(` Quote: ${JSON.stringify(quote)}`)
     ctx.ok(quote)
   }
