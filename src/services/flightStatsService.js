@@ -106,7 +106,11 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
       ]
     ]
 
-    const quote = (await this.gif.contract.call({product, contractName, methodName, parameters})).data
+    const { _weight, _payoutOptions } = (await this.gif.contract.call({product, contractName, methodName, parameters})).data
+    const quote = {
+      weight: _weight,
+      payoutOptions: _payoutOptions
+    }
     await this.tg.send(` Ratings: ${JSON.stringify(rating)} \n Quote: ${JSON.stringify(quote)}`)
     ctx.ok({ rating, quote })
   }
