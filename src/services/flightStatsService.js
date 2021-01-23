@@ -43,17 +43,31 @@ module.exports = class FlightStatsService {
 
   getScheduleEndpoint (data) {
     const { carrier, flightNumber, year, month, day } = data
-    return `${this.flightStatsBaseURL}${this.flightScheduleEndpoint}/${carrier}/${flightNumber}/departing/${year}/${month}/${day}?appId=${this.appId}&appKey=${this.appKey}`
+    return `\
+${this.flightStatsBaseURL}${this.flightScheduleEndpoint}/\
+${carrier}/${flightNumber}/\
+departing/${year}/${month}/${day}\
+?appId=${this.appId}&appKey=${this.appKey}\
+`
   }
 
   getStatusEndpoint (data) {
     const { carrier, flightNumber, year, month, day } = data
-    return `${this.flightStatsBaseURL}${this.flightStatusEndpoint}/${carrier}/${flightNumber}/dep/${year}/${month}/${day}?appId=${this.appId}&appKey=${this.appKey}`
+    return `\
+${this.flightStatsBaseURL}${this.flightStatusEndpoint}/\
+${carrier}/${flightNumber}\
+/dep/${year}/${month}/${day}\
+?appId=${this.appId}&appKey=${this.appKey}\
+`
   }
 
   getRatingsEndpoint (data) {
     const { carrier, flightNumber } = data
-    return `${this.flightStatsBaseURL}${this.flightRatingsEndpoint}/${carrier}/${flightNumber}?appId=${this.appId}&appKey=${this.appKey}`
+    return `\
+${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
+/${carrier}/${flightNumber}\
+?appId=${this.appId}&appKey=${this.appKey}\
+`
   }
 
   async getSchedule (ctx, data) {
@@ -92,8 +106,8 @@ module.exports = class FlightStatsService {
     ]
 
     const quote = (await this.gif.contract.call({product, contractName, methodName, parameters})).data
-    await this.tg.send(` Quote: ${JSON.stringify(quote)}`)
-    ctx.ok(quote)
+    await this.tg.send(` Ratings: ${JSON.stringify(rating)} \n Quote: ${JSON.stringify(quote)}`)
+    ctx.ok({ rating, quote })
   }
 
 }
