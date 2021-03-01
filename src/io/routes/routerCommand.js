@@ -21,8 +21,9 @@ module.exports = class RouterCommand {
    * @param schema
    * @param service
    * @param command
+   * @param json
    */
-  command (method, path, schema, service, command) {
+  command (method, path, schema, service, command, json = true) {
 
     /**
      * Workflow:
@@ -32,7 +33,7 @@ module.exports = class RouterCommand {
      * 4. Handle command errors
      */
     this.router[method](this.config.API_VERSION + path, async (ctx) => {
-      const data = ctx.params
+      const data = json ? ctx.request.body : ctx.params
       const validate = this.ajv.compile(schema)
 
       if (!validate(data)) {

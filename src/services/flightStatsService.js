@@ -41,6 +41,19 @@ module.exports = class FlightStatsService {
     }
   }
 
+  async getFlightStatsOracle (ctx, endpoint, data) {
+
+    const json = await this.fetchEndpoint(endpoint)
+    if (json.error) {
+      await this.tg.send(`Error: ${JSON.stringify(json.error)}`)
+      ctx.badRequest(json.error)
+    } else {
+      // this.tg.send(`Success: ${JSON.stringify(json)}`)
+      await this.tg.send(`Success`)
+      ctx.ok({jobRunID: data.id, data: json})
+    }
+  }
+
   getScheduleEndpoint (data) {
     const { carrier, flightNumber, year, month, day } = data
     return `\
@@ -83,6 +96,16 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
   async getRatings (ctx, data) {
     await this.tg.send(`Get Ratings: ${JSON.stringify(data)}`)
     await this.getFlightStats(ctx, this.getRatingsEndpoint(data))
+  }
+
+  async getStatusOracle (ctx, data) {
+    await this.tg.send(`Get Status Oracle: ${JSON.stringify(data)}`)
+    await this.getFlightStatsOracle(ctx, this.getStatusEndpoint(data.data), data)
+  }
+
+  async getRatingsOracle (ctx, data) {
+    await this.tg.send(`Get Ratings Oracle: ${JSON.stringify(data)}`)
+    await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data.data), data)
   }
 
   async getQuote (ctx, data) { // data = { premium, carrier, flightNumber }
