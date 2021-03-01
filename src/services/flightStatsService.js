@@ -41,16 +41,14 @@ module.exports = class FlightStatsService {
     }
   }
 
-  async getFlightStatsOracle (ctx, endpoint, data) {
+  async getFlightStatsOracle (ctx, endpoint) {
 
     const json = await this.fetchEndpoint(endpoint)
     if (json.error) {
       await this.tg.send(`Error: ${JSON.stringify(json.error)}`)
       ctx.badRequest(json.error)
     } else {
-      // this.tg.send(`Success: ${JSON.stringify(json)}`)
-      await this.tg.send(`Success`)
-      ctx.ok({jobRunID: data.id, data: json})
+      return json
     }
   }
 
@@ -100,12 +98,43 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
 
   async getStatusOracle (ctx, data) {
     await this.tg.send(`Get Status Oracle: ${JSON.stringify(data)}`)
-    await this.getFlightStatsOracle(ctx, this.getStatusEndpoint(data.data), data)
+    const json = await this.getFlightStatsOracle(ctx, this.getStatusEndpoint(data.data))
+    if (!('flightStatuses' in json) || json.flightStatuses.length < 1) {
+      const msg = `Error: result has no flightStatuses`
+      await this.tg.send(msg)
+      ctx.badRequest(msg)
+    }
+    const flightStatuses = json.flightStatuses[0]
+    if (
+      'status' in flightStatuses &&
+      'operationalTimes' in flightStatuses
+    ) {
+      const status = flightStatuses.status
+      if (status === 'L') {
+        const arrived = 'actualGateArrival' in flightStatuses.operationalTimes
+        if (arrived) {
+          const delay = 'delays' in flightStatuses && 'arrivalGateDelayMinutes' in flightStatuses.delays
+            ? flightStatuses.delays.arrivalGateDelayMinutes
+            : 0
+          ctx.ok({status, delay})
+        } else { // landed, but no actualGateArrival, so probably taxiing or doors not open
+          ctx.ok({status: 'A', delay: -1})
+        }
+      } else {
+        ctx.ok({status, delay: -1})
+      }
+    }
   }
 
   async getRatingsOracle (ctx, data) {
     await this.tg.send(`Get Ratings Oracle: ${JSON.stringify(data)}`)
-    await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data.data), data)
+    const json = await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data.data))
+    const ratings = json.ratings[0]
+    ctx.ok(['observations', 'ontime', 'late15', 'late30', 'late45', 'cancelled', 'diverted']
+      .reduce((obj, item) => {
+        obj[item] = ratings[item]
+        return obj
+      }, {}))
   }
 
   async getQuote (ctx, data) { // data = { premium, carrier, flightNumber }
