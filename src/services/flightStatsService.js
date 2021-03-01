@@ -98,7 +98,7 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
 
   async getStatusOracle (ctx, data) {
     await this.tg.send(`Get Status Oracle: ${JSON.stringify(data)}`)
-    const json = await this.getFlightStatsOracle(ctx, this.getStatusEndpoint(data.data))
+    const json = await this.getFlightStatsOracle(ctx, this.getStatusEndpoint(data))
     if (!('flightStatuses' in json) || json.flightStatuses.length < 1) {
       const msg = `Error: result has no flightStatuses`
       await this.tg.send(msg)
@@ -132,7 +132,7 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
 
   async getRatingsOracle (ctx, data) {
     await this.tg.send(`Get Ratings Oracle: ${JSON.stringify(data)}`)
-    const json = await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data.data))
+    const json = await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data))
     const ratings = json.ratings[0]
     const result = ['observations', 'ontime', 'late15', 'late30', 'late45', 'cancelled', 'diverted']
       .reduce((obj, item) => {
