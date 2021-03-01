@@ -135,10 +135,10 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
     const json = await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data))
     const ratings = json.ratings[0]
     const result = ['observations', 'ontime', 'late15', 'late30', 'late45', 'cancelled', 'diverted']
-      .reduce((obj, item) => {
-        obj[item] = ratings[item]
-        return obj
-      }, {})
+      .reduce((res, item) => {
+        res.push(ratings[item])
+        return res
+      }, [])
     ctx.ok(result)
   }
 
