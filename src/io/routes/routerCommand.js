@@ -23,7 +23,7 @@ module.exports = class RouterCommand {
    * @param command
    * @param json
    */
-  command (method, path, schema, service, command, json = true) {
+  command (method, path, schema, service, command, json = false) {
 
     /**
      * Workflow:
