@@ -123,6 +123,10 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
       } else {
         ctx.ok({status, delay: -1})
       }
+    } else {
+      const msg = `Error: result has no status`
+      await this.tg.send(msg)
+      ctx.badRequest(msg)
     }
   }
 
@@ -130,11 +134,12 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
     await this.tg.send(`Get Ratings Oracle: ${JSON.stringify(data)}`)
     const json = await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data.data))
     const ratings = json.ratings[0]
-    ctx.ok(['observations', 'ontime', 'late15', 'late30', 'late45', 'cancelled', 'diverted']
+    const result = ['observations', 'ontime', 'late15', 'late30', 'late45', 'cancelled', 'diverted']
       .reduce((obj, item) => {
         obj[item] = ratings[item]
         return obj
-      }, {}))
+      }, {})
+    ctx.ok(result)
   }
 
   async getQuote (ctx, data) { // data = { premium, carrier, flightNumber }
