@@ -177,7 +177,8 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
       await this.tg.send(` Ratings: ${JSON.stringify(rating)} \n Quote: ${JSON.stringify(quote)}`)
       ctx.ok({rating, quote})
     } else {
-      ctx.throw(404)
+      ctx.status = 404
+      ctx.body = 'Flight data not available'
     }
   }
 }
