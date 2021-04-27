@@ -144,32 +144,40 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
 
   async getQuote (ctx, data) { // data = { premium, carrier, flightNumber }
     await this.tg.send(`Get Quote: ${JSON.stringify(data)}`)
-    const { ratings } = await this.fetchEndpoint(this.getRatingsEndpoint(data))
-    const rating = (({observations, ontime, late15, late30, late45, cancelled, diverted}) =>
-      ({observations, ontime, late15, late30, late45, cancelled, diverted}))(ratings[0])
-    const { premium } = data
-    const product = 'FlightDelaySokol'
-    const contractName = 'FlightDelayEtheriscOracle'
-    const methodName = 'calculatePayouts'
-    const parameters = [
-      parseInt(premium, 10),
-      [
-        rating.observations,
-        rating.late15,
-        rating.late30,
-        rating.late45,
-        rating.cancelled,
-        rating.diverted
+    const {ratings} = await this.fetchEndpoint(this.getRatingsEndpoint(data))
+    if (ratings && ratings[0] && ratings[0].observations) {
+      const rating = (({observations, ontime, late15, late30, late45, cancelled, diverted}) =>
+        ({observations, ontime, late15, late30, late45, cancelled, diverted}))(ratings[0])
+      const {premium} = data
+      const product = 'FlightDelaySokol'
+      const contractName = 'FlightDelayEtheriscOracle'
+      const methodName = 'calculatePayouts'
+      const parameters = [
+        parseInt(premium, 10),
+        [
+          rating.observations,
+          rating.late15,
+          rating.late30,
+          rating.late45,
+          rating.cancelled,
+          rating.diverted
+        ]
       ]
-    ]
 
-    const { _weight, _payoutOptions } = (await this.gif.contract.call({product, contractName, methodName, parameters})).data
-    const quote = {
-      weight: _weight,
-      payoutOptions: _payoutOptions
+      const {_weight, _payoutOptions} = (await this.gif.contract.call({
+        product,
+        contractName,
+        methodName,
+        parameters
+      })).data
+      const quote = {
+        weight: _weight,
+        payoutOptions: _payoutOptions
+      }
+      await this.tg.send(` Ratings: ${JSON.stringify(rating)} \n Quote: ${JSON.stringify(quote)}`)
+      ctx.ok({rating, quote})
+    } else {
+      ctx.throw(404)
     }
-    await this.tg.send(` Ratings: ${JSON.stringify(rating)} \n Quote: ${JSON.stringify(quote)}`)
-    ctx.ok({ rating, quote })
   }
-
 }
