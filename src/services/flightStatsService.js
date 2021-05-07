@@ -134,11 +134,12 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
     await this.tg.send(`Get Ratings Oracle: ${JSON.stringify(data)}`)
     const json = await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data))
     const ratings = json.ratings[0]
-    const result = ['observations', 'ontime', 'late15', 'late30', 'late45', 'cancelled', 'diverted']
+    const result = ['observations', 'late15', 'late30', 'late45', 'cancelled', 'diverted']
       .reduce((res, item) => {
         res.push(ratings[item])
         return res
       }, [])
+      .join(',')
     ctx.ok(result)
   }
 
