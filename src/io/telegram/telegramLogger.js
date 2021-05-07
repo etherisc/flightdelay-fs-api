@@ -28,7 +28,11 @@ module.exports = class TelegramLogger {
     }
 
     this.telegramTransport = (str, args) => {
-      this.send((args.length < 4 ? '<-- ' : '--> ') + args.slice(1).join(' '))
+      if (args) {
+        this.send((args.length < 4 ? '<-- ' : '--> ') + args.slice(1).join(' '))
+      } else {
+        this.send(str)
+      }
     }
 
   }

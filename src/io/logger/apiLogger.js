@@ -5,10 +5,10 @@ function logger (transport) {
   const koaLog = koaLogger(transport)
 
   return async function logger (ctx, next) {
+    transport(`Method: ${ctx.request.method}; URL: ${ctx.request.url}`)
     koaLog(ctx, next)
-    console.log(ctx)
 
-    await next()
+    //  await next()
   }
 }
 
