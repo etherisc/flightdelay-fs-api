@@ -140,7 +140,9 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
         return res
       }, [])
       .join(',')
-    ctx.ok(result)
+    await this.tg.send(`Result: ${result}`)
+    ctx.response.body = result
+    ctx.response.status = 200
   }
 
   async getQuote (ctx, data) { // data = { premium, carrier, flightNumber }

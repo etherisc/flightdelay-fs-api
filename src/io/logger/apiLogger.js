@@ -12,4 +12,4 @@ function logger (transport) {
   }
 }
 
-module.exports = logger
+module.exports = koaLogger
