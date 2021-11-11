@@ -8,7 +8,6 @@ const Router = require('koa-router')
 const BodyParser = require('koa-bodyparser')
 const Cors = require('kcors')
 const Respond = require('koa-respond')
-const GIF = require('@etherisc/gif-connect')
 const dotenv = require('dotenv')
 const logger = require('./io/logger/apiLogger')
 const ioModule = require('./io/module')
@@ -45,7 +44,6 @@ async function runServer() {
     API_VERSION: '/api/v1',
     NO_BOT: process.env.NO_BOT,
   }
-  config.gif = new GIF.Instance(process.env.HTTP_PROVIDER, process.env.GIF_REGISTRY)
   const ioDeps = ioModule({ config })
   const serviceDeps = servicesModule({ config, ioDeps })
 
