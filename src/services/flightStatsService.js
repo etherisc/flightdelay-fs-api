@@ -49,12 +49,13 @@ module.exports = class FlightStatsService {
     this.appKey = config.APP_KEY
     this.httpProvider = config.HTTP_PROVIDER
     this.flightDelayContractAddress = config.FLIGHTDELAY_ADDRESS
+    this.provider = new ethers.providers.JsonRpcProvider({ url: this.httpProvider })
 
     this.flightStatsBaseURL = 'https://api.flightstats.com'
     this.flightScheduleEndpoint = '/flex/schedules/rest/v1/json/flight'
     this.flightStatusEndpoint = '/flex/flightstatus/rest/v2/json/flight/status'
     this.flightRatingsEndpoint = '/flex/ratings/rest/v1/json/flight'
-    this.flightDelayContract = new ethers.Contract(this.flightDelayContractAddress, abi, this.httpProvider)
+    this.flightDelayContract = new ethers.Contract(this.flightDelayContractAddress, abi, this.provider)
   }
 
   async fetchEndpoint(endpoint) {

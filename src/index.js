@@ -9,7 +9,7 @@ const BodyParser = require('koa-bodyparser')
 const Cors = require('kcors')
 const Respond = require('koa-respond')
 const dotenv = require('dotenv')
-const logger = require('./io/logger/apiLogger')
+const logger = require('koa-logger')
 const ioModule = require('./io/module')
 const servicesModule = require('./services/module')
 const routesModule = require('./io/routes/module')
@@ -55,11 +55,8 @@ async function runServer() {
 
   const app = new Koa()
 
-  if (!process.env.NO_BOT) {
-    app.use(logger(ioDeps.telegramBot.telegramTransport))
-  }
-
   app
+    .use(logger(ioDeps.telegramBot.telegramTransport))
     .use(new Cors())
     .use(new BodyParser())
     .use(new Respond())
