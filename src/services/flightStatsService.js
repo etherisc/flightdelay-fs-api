@@ -192,9 +192,6 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
         observations, ontime, late15, late30, late45, cancelled, diverted,
       }))(ratings[0])
       const { premium } = data
-      const product = 'FlightDelaySokol'
-      const contractName = 'FlightDelayEtheriscOracle'
-      const methodName = 'calculatePayouts'
       const parameters = [
         parseInt(premium, 10),
         [
@@ -207,15 +204,10 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
         ],
       ]
 
-      const { _weight, _payoutOptions } = (await this.gif.contract.call({
-        product,
-        contractName,
-        methodName,
-        parameters,
-      })).data
+      const result = await this.flightDelayContract.calculatePayouts(...parameters)
       const quote = {
-        weight: _weight,
-        payoutOptions: _payoutOptions,
+        weight: result._weight.toNumber(),
+        payoutOptions: result._payoutOptions.map((item) => item.toNumber()),
       }
       await this.tg.send(` Ratings: ${JSON.stringify(rating)} \n Quote: ${JSON.stringify(quote)}`)
       ctx.ok({ rating, quote })
