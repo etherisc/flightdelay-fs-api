@@ -41,12 +41,11 @@ function listen(app, port) {
 
 async function runServer() {
   const config = {
-
     ...dotenv.load().parsed,
     API_VERSION: '/api/v1',
     NO_BOT: process.env.NO_BOT,
   }
-  config.gif = await GIF.connect()
+  config.gif = new GIF.Instance(process.env.HTTP_PROVIDER, process.env.GIF_REGISTRY)
   const ioDeps = ioModule({ config })
   const serviceDeps = servicesModule({ config, ioDeps })
 
@@ -76,7 +75,7 @@ async function runServer() {
     }
   })
 
-  listen(app, config.PORT).then((port) => log(`Listening to ${port}`))
+  listen(app, config.PORT).then((port) => log.log(`Listening to ${port}`))
 }
 
 runServer()
