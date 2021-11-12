@@ -192,7 +192,7 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
         observations, ontime, late15, late30, late45, cancelled, diverted,
       }))(ratings[0])
       const { premium } = data // here premium is in USD Cents
-      const premiumInWei = ethers.utils.parseEther(premium)
+      const premiumInWei = ethers.utils.parseEther((parseInt(premium, 10) / 100).toFixed(2).toString())
       const parameters = [
         premiumInWei,
         [
