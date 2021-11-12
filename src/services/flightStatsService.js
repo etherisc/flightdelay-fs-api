@@ -191,9 +191,10 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
       }) => ({
         observations, ontime, late15, late30, late45, cancelled, diverted,
       }))(ratings[0])
-      const { premium } = data
+      const { premium } = data // here premium is in USD Cents
+      const premiumInWei = ethers.utils.parseEther(premium)
       const parameters = [
-        parseInt(premium, 10),
+        premiumInWei,
         [
           rating.observations,
           rating.late15,
@@ -207,7 +208,7 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
       const result = await this.flightDelayContract.calculatePayouts(...parameters)
       const quote = {
         weight: result._weight.toNumber(),
-        payoutOptions: result._payoutOptions.map((item) => item.toNumber()),
+        payoutOptions: result._payoutOptions.map((item) => ethers.utils.formatEther(item)),
       }
       await this.tg.send(` Ratings: ${JSON.stringify(rating)} \n Quote: ${JSON.stringify(quote)}`)
       ctx.ok({ rating, quote })
