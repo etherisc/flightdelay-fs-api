@@ -79,10 +79,9 @@ module.exports = class FlightStatsService {
     const json = await this.fetchEndpoint(endpoint)
     if (json.error) {
       await this.tg.send(`Error: ${JSON.stringify(json.error)}`)
-      ctx.badRequest(json.error)
-    } else {
-      ctx.ok(json)
+      return {}
     }
+    return json
   }
 
   getScheduleEndpoint(data) {
@@ -147,19 +146,22 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
       && 'operationalTimes' in flightStatuses
     ) {
       const { status } = flightStatuses
+      let result
       if (status === 'L') {
         const arrived = 'actualGateArrival' in flightStatuses.operationalTimes
         if (arrived) {
           const delay = 'delays' in flightStatuses && 'arrivalGateDelayMinutes' in flightStatuses.delays
             ? flightStatuses.delays.arrivalGateDelayMinutes
             : 0
-          ctx.ok({ status, delay })
+          result = `${status},${delay}`
         } else { // landed, but no actualGateArrival, so probably taxiing or doors not open
-          ctx.ok({ status: 'A', delay: -1 })
+          result = 'A,0'
         }
       } else {
-        ctx.ok({ status, delay: -1 })
+        result = `${status},0`
       }
+      ctx.response.body = result
+      ctx.response.status = 200
     } else {
       const msg = 'Error: result has no status'
       await this.tg.send(msg)
