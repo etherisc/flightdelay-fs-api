@@ -184,10 +184,10 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
         }, [])
         .join(',')
       await this.tg.send(`Result: ${result}`)
-      ctx.response.body = result
+      ctx.response.body = `[${result}]`
       ctx.response.status = 200
     } catch (error) {
-      ctx.response.body = '0,0,0,0,0,0'
+      ctx.response.body = '[0,0,0,0,0,0]'
       ctx.response.status = 200
     }
   }
