@@ -8,7 +8,9 @@ module.exports = class RouterCommand {
    * @param authenticator
    * @param ajv     minimal json schema validator
    */
-  constructor ({config, router, authenticator, ajv}) {
+  constructor({
+    config, router, authenticator, ajv,
+  }) {
     this.config = config
     this.router = router
     this.ajv = ajv
@@ -22,8 +24,7 @@ module.exports = class RouterCommand {
    * @param service
    * @param command
    */
-  command (method, path, schema, service, command) {
-
+  command(method, path, schema, service, command) {
     /**
      * Workflow:
      * 1. Validate data against schema
@@ -32,30 +33,28 @@ module.exports = class RouterCommand {
      * 4. Handle command errors
      */
     this.router[method](this.config.API_VERSION + path, async (ctx) => {
-      const data = ctx.params
+      const data = path.includes(':') ? ctx.params : ctx.request.body
       const validate = this.ajv.compile(schema)
 
       if (!validate(data)) {
-        ctx.badRequest({error: validate.errors})
+        ctx.badRequest({ error: validate.errors })
         return
       }
 
       try {
         await service[command](ctx, data)
       } catch (error) {
-        console.error(error)
+        // console.error(error)
         ctx.badRequest(error)
       }
     })
-
   }
 
-  post (...args) {
+  post(...args) {
     this.command('post', ...args)
   }
 
-  get (...args) {
+  get(...args) {
     this.command('get', ...args)
   }
-
 }
