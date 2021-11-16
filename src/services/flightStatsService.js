@@ -141,12 +141,12 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
       ctx.badRequest(msg)
     }
     const flightStatuses = json.flightStatuses[0]
+    let result
     if (
       'status' in flightStatuses
       && 'operationalTimes' in flightStatuses
     ) {
       const { status } = flightStatuses
-      let result
       if (status === 'L') {
         const arrived = 'actualGateArrival' in flightStatuses.operationalTimes
         if (arrived) {
@@ -160,28 +160,31 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
       } else {
         result = `${status},0`
       }
-      ctx.response.body = result
-      ctx.response.status = 200
-    } else {
-      const msg = 'Error: result has no status'
-      await this.tg.send(msg)
-      ctx.badRequest(msg)
+    } else { // catch all at all types of errors, missing parameters etc.
+      result = 'X,0' // this will lead to a revert in the smart contract
     }
+    ctx.response.body = result
+    ctx.response.status = 200
   }
 
   async getRatingsOracle(ctx, data) {
     await this.tg.send(`Get Ratings Oracle: ${JSON.stringify(data)}`)
-    const json = await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data))
-    const ratings = json.ratings[0]
-    const result = ['observations', 'late15', 'late30', 'late45', 'cancelled', 'diverted']
-      .reduce((res, item) => {
-        res.push(ratings[item])
-        return res
-      }, [])
-      .join(',')
-    await this.tg.send(`Result: ${result}`)
-    ctx.response.body = result
-    ctx.response.status = 200
+    try {
+      const json = await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data))
+      const ratings = json.ratings[0]
+      const result = ['observations', 'late15', 'late30', 'late45', 'cancelled', 'diverted']
+        .reduce((res, item) => {
+          res.push(ratings[item])
+          return res
+        }, [])
+        .join(',')
+      await this.tg.send(`Result: ${result}`)
+      ctx.response.body = result
+      ctx.response.status = 200
+    } catch (error) {
+      ctx.response.body = '0,0,0,0,0,0'
+      ctx.response.status = 200
+    }
   }
 
   async getQuote(ctx, data) { // data = { premium, carrier, flightNumber }
