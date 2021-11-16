@@ -134,37 +134,42 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
 
   async getStatusOracle(ctx, data) {
     await this.tg.send(`Get Status Oracle: ${JSON.stringify(data)}`)
-    const json = await this.getFlightStatsOracle(ctx, this.getStatusEndpoint(data))
-    if (!('flightStatuses' in json) || json.flightStatuses.length < 1) {
-      const msg = 'Error: result has no flightStatuses'
-      await this.tg.send(msg)
-      ctx.badRequest(msg)
-    }
-    const flightStatuses = json.flightStatuses[0]
-    let result
-    if (
-      'status' in flightStatuses
-      && 'operationalTimes' in flightStatuses
-    ) {
-      const { status } = flightStatuses
-      if (status === 'L') {
-        const arrived = 'actualGateArrival' in flightStatuses.operationalTimes
-        if (arrived) {
-          const delay = 'delays' in flightStatuses && 'arrivalGateDelayMinutes' in flightStatuses.delays
-            ? flightStatuses.delays.arrivalGateDelayMinutes
-            : 0
-          result = `${status},${delay}`
-        } else { // landed, but no actualGateArrival, so probably taxiing or doors not open
-          result = 'A,0'
-        }
-      } else {
-        result = `${status},0`
+    try {
+      const json = await this.getFlightStatsOracle(ctx, this.getStatusEndpoint(data))
+      if (!('flightStatuses' in json) || json.flightStatuses.length < 1) {
+        const msg = 'Error: result has no flightStatuses'
+        await this.tg.send(msg)
+        ctx.badRequest(msg)
       }
-    } else { // catch all at all types of errors, missing parameters etc.
-      result = 'X,0' // this will lead to a revert in the smart contract
+      const flightStatuses = json.flightStatuses[0]
+      let result
+      if (
+        'status' in flightStatuses
+        && 'operationalTimes' in flightStatuses
+      ) {
+        const { status } = flightStatuses
+        if (status === 'L') {
+          const arrived = 'actualGateArrival' in flightStatuses.operationalTimes
+          if (arrived) {
+            const delay = 'delays' in flightStatuses && 'arrivalGateDelayMinutes' in flightStatuses.delays
+              ? flightStatuses.delays.arrivalGateDelayMinutes
+              : 0
+            result = `${status},${delay}`
+          } else { // landed, but no actualGateArrival, so probably taxiing or doors not open
+            result = 'A,0'
+          }
+        } else {
+          result = `${status},0`
+        }
+      } else { // catch all at all types of errors, missing parameters etc.
+        result = 'X,0' // this will lead to a revert in the smart contract
+      }
+      ctx.response.body = result
+      ctx.response.status = 200
+    } catch (error) {
+      ctx.response.body = 'X,0'
+      ctx.response.status = 200
     }
-    ctx.response.body = result
-    ctx.response.status = 200
   }
 
   async getRatingsOracle(ctx, data) {
