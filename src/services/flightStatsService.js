@@ -97,22 +97,20 @@ departing/${year}/${month}/${day}\
   }
 
   getStatusEndpoint(data) {
-    const {
-      carrier, flightNumber, year, month, day,
-    } = data
+    const { carrierFlightNumber, yearMonthDay } = data
     return `\
 ${this.flightStatsBaseURL}${this.flightStatusEndpoint}/\
-${carrier}/${flightNumber}\
-/dep/${year}/${month}/${day}\
+${carrierFlightNumber}\
+/dep/${yearMonthDay}\
 ?appId=${this.appId}&appKey=${this.appKey}\
 `
   }
 
   getRatingsEndpoint(data) {
-    const { carrier, flightNumber } = data
+    const { carrierFlightNumber } = data
     return `\
 ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
-/${carrier}/${flightNumber}\
+/${carrierFlightNumber}\
 ?appId=${this.appId}&appKey=${this.appKey}\
 `
   }
