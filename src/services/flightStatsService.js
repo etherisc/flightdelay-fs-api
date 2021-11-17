@@ -149,7 +149,7 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
         'status' in flightStatuses
         && 'operationalTimes' in flightStatuses
       ) {
-        const { statusString } = flightStatuses
+        const { status: statusString } = flightStatuses
         const status = statusHex(statusString)
         if (status === statusHex('L')) {
           const arrived = 'actualGateArrival' in flightStatuses.operationalTimes
