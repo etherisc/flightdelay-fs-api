@@ -177,18 +177,21 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
     try {
       const json = await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data))
       const ratings = json.ratings[0]
-      const result = [
-        ratings.observations,
-        ratings.late15,
-        ratings.late30,
-        ratings.late45,
-        ratings.cancelled,
-        ratings.diverted,
-      ]
+      const result = {
+        observations: ratings.observations,
+        late15: ratings.late15,
+        late30: ratings.late30,
+        late45: ratings.late45,
+        cancelled: ratings.cancelled,
+        diverted: ratings.diverted,
+      }
+
       await this.tg.send(`Result: ${result}`)
-      ctx.ok({ statistics: result })
+      ctx.ok(result)
     } catch (error) {
-      ctx.ok({ statistics: [0, 0, 0, 0, 0, 0] })
+      ctx.ok({
+        observations: 0, late15: 0, late30: 0, late45: 0, cancelled: 0, diverted: 0,
+      })
     }
   }
 
