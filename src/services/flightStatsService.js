@@ -134,7 +134,8 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
 
   async getStatusOracle(ctx, data) {
     await this.tg.send(`Get Status Oracle: ${JSON.stringify(data)}`)
-    const revertResult = { status: 'X', arrived: false, delay: 0 } // this will lead to a revert in the smart contract
+    const statusHex = (str) => `0x${str.charCodeAt(0).toString(16)}`
+    const revertResult = { status: statusHex('X'), arrived: false, delay: 0 } // this will lead to a revert in the smart contract
     let result
     try {
       const json = await this.getFlightStatsOracle(ctx, this.getStatusEndpoint(data))
@@ -148,8 +149,9 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
         'status' in flightStatuses
         && 'operationalTimes' in flightStatuses
       ) {
-        const { status } = flightStatuses
-        if (status === 'L') {
+        const { statusString } = flightStatuses
+        const status = statusHex(statusString)
+        if (status === statusHex('L')) {
           const arrived = 'actualGateArrival' in flightStatuses.operationalTimes
           if (arrived) {
             const delay = 'delays' in flightStatuses && 'arrivalGateDelayMinutes' in flightStatuses.delays
@@ -157,7 +159,7 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
               : 0
             result = { status, arrived, delay }
           } else { // landed, but no actualGateArrival, so probably taxiing or doors not open
-            result = { status: 'A', arrived: false, delay: 0 }
+            result = { status: statusHex('A'), arrived: false, delay: 0 }
           }
         } else {
           result = { status, arrived: false, delay: 0 }
