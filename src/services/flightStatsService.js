@@ -134,15 +134,16 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
 
   async getStatusOracle(ctx, data) {
     await this.tg.send(`Get Status Oracle: ${JSON.stringify(data)}`)
+    const revertResult = { status: 'X', arrived: false, delay: 0 } // this will lead to a revert in the smart contract
+    let result
     try {
       const json = await this.getFlightStatsOracle(ctx, this.getStatusEndpoint(data))
       if (!('flightStatuses' in json) || json.flightStatuses.length < 1) {
         const msg = 'Error: result has no flightStatuses'
         await this.tg.send(msg)
-        ctx.badRequest(msg)
+        ctx.ok(revertResult)
       }
       const flightStatuses = json.flightStatuses[0]
-      let result
       if (
         'status' in flightStatuses
         && 'operationalTimes' in flightStatuses
@@ -154,21 +155,17 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
             const delay = 'delays' in flightStatuses && 'arrivalGateDelayMinutes' in flightStatuses.delays
               ? flightStatuses.delays.arrivalGateDelayMinutes
               : 0
-            result = `${status},${delay}`
+            result = { status, arrived, delay }
           } else { // landed, but no actualGateArrival, so probably taxiing or doors not open
-            result = 'A,0'
+            result = { status: 'A', arrived: false, delay: 0 }
           }
         } else {
-          result = `${status},0`
+          result = { status, arrived: false, delay: 0 }
         }
-      } else { // catch all at all types of errors, missing parameters etc.
-        result = 'X,0' // this will lead to a revert in the smart contract
       }
-      ctx.response.body = result
-      ctx.response.status = 200
+      ctx.ok(result)
     } catch (error) {
-      ctx.response.body = 'X,0'
-      ctx.response.status = 200
+      ctx.ok(revertResult)
     }
   }
 
