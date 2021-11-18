@@ -3,23 +3,14 @@ module.exports = {
   getStatusOracleSchema: {
     $id: '#status',
     properties: {
-      carrier: {
+      carrierFlightNumber: {
         type: 'string',
       },
-      flightNumber: {
+      yearMonthDay: {
         type: 'string',
-      },
-      year: {
-        type: 'number',
-      },
-      month: {
-        type: 'number',
-      },
-      day: {
-        type: 'number',
       },
     },
-    required: ['carrier', 'flightNumber', 'year', 'month', 'day'],
+    required: ['carrierFlightNumber', 'yearMonthDay'],
     additionalProperties: false,
   },
 
@@ -28,14 +19,11 @@ module.exports = {
     type: 'object',
     properties:
       {
-        carrier: {
-          type: 'string',
-        },
-        flightNumber: {
+        carrierFlightNumber: {
           type: 'string',
         },
       },
-    required: ['carrier', 'flightNumber'],
+    required: ['carrierFlightNumber'],
     additionalProperties:
       false,
   },
