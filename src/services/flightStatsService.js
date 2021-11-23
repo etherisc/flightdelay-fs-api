@@ -217,8 +217,8 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
 
       const result = await this.flightDelayContract.calculatePayouts(...parameters)
       const quote = {
-        weight: result._weight.toNumber(),
-        payoutOptions: result._payoutOptions.map((item) => ethers.utils.formatEther(item)),
+        weight: result._weight.toString(),
+        payoutOptions: result._payoutOptions.map((item) => ethers.utils.formatUnits(item, 0)),
       }
       await this.tg.send(` Ratings: ${JSON.stringify(rating)} \n Quote: ${JSON.stringify(quote)}`)
       ctx.ok({ rating, quote })
