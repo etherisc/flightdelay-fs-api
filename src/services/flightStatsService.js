@@ -163,8 +163,10 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
           result = { status, arrived: false, delay: 0 }
         }
       }
+      await this.tg.send(`Result: ${JSON.stringify(result)}`)
       ctx.ok(result)
     } catch (error) {
+      await this.tg.send(`RevertResult: ${JSON.stringify(revertResult)}`)
       ctx.ok(revertResult)
     }
   }

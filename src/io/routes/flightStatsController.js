@@ -6,5 +6,6 @@ module.exports = ({ routerCommand, schemas, flightStatsService }) => {
 
   // preprocessed results for oracles
   routerCommand.get('/status-oracle', schemas.getStatusOracleSchema, flightStatsService, 'getStatusOracle')
+  routerCommand.post('/status-oracle', schemas.getStatusOracleSchema, flightStatsService, 'getStatusOracle')
   routerCommand.get('/ratings-oracle', schemas.getRatingsOracleSchema, flightStatsService, 'getRatingsOracle')
 }
