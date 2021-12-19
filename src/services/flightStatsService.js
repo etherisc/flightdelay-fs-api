@@ -1,38 +1,7 @@
 const fetch = require('node-fetch')
 const ethers = require('ethers')
 
-const abi = [
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '_premium',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256[6]',
-        name: '_statistics',
-        type: 'uint256[6]',
-      },
-    ],
-    name: 'calculatePayouts',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '_weight',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256[5]',
-        name: '_payoutOptions',
-        type: 'uint256[5]',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-    constant: true,
-  },
-]
+const abi = require('../schemas/abi.json')
 
 module.exports = class FlightStatsService {
   /**

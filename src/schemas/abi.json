@@ -1,0 +1,1083 @@
+[
+  {
+    "type": "constructor",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_productServiceAddress",
+        "internalType": "address"
+      },
+      {
+        "type": "bytes32",
+        "name": "_ratingsOracleType",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "uint256",
+        "name": "_ratingsOracleId",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bytes32",
+        "name": "_statusesOracleType",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "uint256",
+        "name": "_statusesOracleId",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "LogCallback",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "_bytes",
+        "internalType": "bytes32",
+        "indexed": false
+      },
+      {
+        "type": "bytes",
+        "name": "_data",
+        "internalType": "bytes",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "LogError",
+    "inputs": [
+      {
+        "type": "string",
+        "name": "error",
+        "internalType": "string",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "index",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "stored",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "calculated",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "LogPolicyExpired",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "bpKey",
+        "internalType": "bytes32",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "LogRequestFlightRatings",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "requestId",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "bytes32",
+        "name": "carrierFlightNumber",
+        "internalType": "bytes32",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "departureTime",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "arrivalTime",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "bytes32",
+        "name": "riskId",
+        "internalType": "bytes32",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "LogRequestFlightStatus",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "requestId",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "arrivalTime",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "bytes32",
+        "name": "carrierFlightNumber",
+        "internalType": "bytes32",
+        "indexed": false
+      },
+      {
+        "type": "bytes32",
+        "name": "departureYearMonthDay",
+        "internalType": "bytes32",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "LogRequestPayment",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "bpKey",
+        "internalType": "bytes32",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "requestId",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "LogRequestPayout",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "bpKey",
+        "internalType": "bytes32",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "claimId",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "payoutId",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "LogUnexpectedStatus",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "bpKey",
+        "internalType": "bytes32",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "requestId",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "bytes1",
+        "name": "status",
+        "internalType": "bytes1",
+        "indexed": false
+      },
+      {
+        "type": "int256",
+        "name": "delay",
+        "internalType": "int256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "LogUnprocessableStatus",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "bpKey",
+        "internalType": "bytes32",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "requestId",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "previousOwner",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "newOwner",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "CHECK_OFFSET",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "MARGIN_PERCENT",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "MAX_FLIGHT_DURATION",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "MAX_PAYOUT",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "MAX_PREMIUM",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "MAX_TOTAL_PAYOUT",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "MIN_OBSERVATIONS",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "MIN_PREMIUM",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "MIN_TIME_BEFORE_DEPARTURE",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bytes32",
+        "name": "",
+        "internalType": "bytes32"
+      }
+    ],
+    "name": "NAME",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bytes32",
+        "name": "",
+        "internalType": "bytes32"
+      }
+    ],
+    "name": "POLICY_FLOW",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "string",
+        "name": "",
+        "internalType": "string"
+      }
+    ],
+    "name": "RATINGS_CALLBACK",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "string",
+        "name": "",
+        "internalType": "string"
+      }
+    ],
+    "name": "STATUSES_CALLBACK",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bytes32",
+        "name": "",
+        "internalType": "bytes32"
+      }
+    ],
+    "name": "VERSION",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "addRoleToAccount",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_address",
+        "internalType": "address"
+      },
+      {
+        "type": "bytes32",
+        "name": "_role",
+        "internalType": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bytes32",
+        "name": "",
+        "internalType": "bytes32"
+      }
+    ],
+    "name": "addressToBpKeys",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "addressToPolicyCount",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "payable",
+    "outputs": [],
+    "name": "applyForPolicy",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "_carrierFlightNumber",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "bytes32",
+        "name": "_departureYearMonthDay",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "uint256",
+        "name": "_departureTime",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "_arrivalTime",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256[5]",
+        "name": "_payouts",
+        "internalType": "uint256[5]"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "bpKeyToAddress",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "",
+        "internalType": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "_weight",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256[5]",
+        "name": "_payoutOptions",
+        "internalType": "uint256[5]"
+      }
+    ],
+    "name": "calculatePayouts",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_premium",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256[6]",
+        "name": "_statistics",
+        "internalType": "uint256[6]"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "errors",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "checkApplication",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "_carrierFlightNumber",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "uint256",
+        "name": "_departureTime",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "_arrivalTime",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "_premium",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "cleanRolesForAccount",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "createRole",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "_role",
+        "internalType": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "name": "developmentMode",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "faucet",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "flightRatingsCallback",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_requestId",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bytes32",
+        "name": "_bpKey",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "bytes",
+        "name": "_response",
+        "internalType": "bytes"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "flightStatusCallback",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_requestId",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bytes32",
+        "name": "_bpKey",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "bytes",
+        "name": "_response",
+        "internalType": "bytes"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "_hasRole",
+        "internalType": "bool"
+      }
+    ],
+    "name": "hasRole",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_address",
+        "internalType": "address"
+      },
+      {
+        "type": "bytes32",
+        "name": "_role",
+        "internalType": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "name": "maintenanceMode",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint8",
+        "name": "",
+        "internalType": "uint8"
+      }
+    ],
+    "name": "maxWeight",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "name": "onChainPaymentMode",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "owner",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "permissions",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "productId",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "contract IProductService"
+      }
+    ],
+    "name": "productService",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "ratingsOracleId",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bytes32",
+        "name": "",
+        "internalType": "bytes32"
+      }
+    ],
+    "name": "ratingsOracleType",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "renounceOwnership",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bytes32",
+        "name": "carrierFlightNumber",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "bytes32",
+        "name": "departureYearMonthDay",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "uint256",
+        "name": "departureTime",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "arrivalTime",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "delayInMinutes",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint8",
+        "name": "delay",
+        "internalType": "uint8"
+      },
+      {
+        "type": "uint256",
+        "name": "estimatedMaxTotalPayout",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "premiumMultiplier",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "weight",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "risks",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "",
+        "internalType": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "roles",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "",
+        "internalType": "bytes32"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bytes32",
+        "name": "",
+        "internalType": "bytes32"
+      }
+    ],
+    "name": "rolesKeys",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setOracles",
+    "inputs": [
+      {
+        "type": "bytes32",
+        "name": "_ratingsOracleType",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "uint256",
+        "name": "_ratingsOracleId",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bytes32",
+        "name": "_statusesOracleType",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "uint256",
+        "name": "_statusesOracleId",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "statusesOracleId",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bytes32",
+        "name": "",
+        "internalType": "bytes32"
+      }
+    ],
+    "name": "statusesOracleType",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "transferOwnership",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "newOwner",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "uniqueIndex",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint8",
+        "name": "",
+        "internalType": "uint8"
+      }
+    ],
+    "name": "weightPattern",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ]
+  }
+]
