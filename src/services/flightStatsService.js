@@ -3,6 +3,8 @@ const ethers = require('ethers')
 
 const abi = require('../schemas/abi.json')
 
+const hours = 60 * 60 * 1000
+
 module.exports = class FlightStatsService {
   /**
    * Constructor.
@@ -38,7 +40,6 @@ module.exports = class FlightStatsService {
       await this.tg.send(`Error: ${JSON.stringify(json.error)}`)
       ctx.badRequest(json.error)
     } else {
-      // this.tg.send(`Success: ${JSON.stringify(json)}`)
       await this.tg.send('Success')
       ctx.ok(json)
     }
@@ -66,6 +67,18 @@ departing/${year}/${month}/${day}\
   }
 
   getStatusEndpoint(data) {
+    const {
+      carrier, flightNumber, year, month, day,
+    } = data
+    return `\
+${this.flightStatsBaseURL}${this.flightStatusEndpoint}/\
+${carrier}/${flightNumber}\
+/dep/${year}/${month}/${day}\
+?appId=${this.appId}&appKey=${this.appKey}\
+`
+  }
+
+  getStatusOracleEndpoint(data) {
     const { carrierFlightNumber, yearMonthDay } = data
     return `\
 ${this.flightStatsBaseURL}${this.flightStatusEndpoint}/\
@@ -76,6 +89,15 @@ ${carrierFlightNumber}\
   }
 
   getRatingsEndpoint(data) {
+    const { carrier, flightNumber } = data
+    return `\
+${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
+/${carrier}/${flightNumber}\
+?appId=${this.appId}&appKey=${this.appKey}\
+`
+  }
+
+  getRatingsOracleEndpoint(data) {
     const { carrierFlightNumber } = data
     return `\
 ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
@@ -105,7 +127,7 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
     const revertResult = { status: statusHex('X'), arrived: false, delay: 0 } // this will lead to a revert in the smart contract
     let result
     try {
-      const json = await this.getFlightStatsOracle(ctx, this.getStatusEndpoint(data))
+      const json = await this.getFlightStatsOracle(ctx, this.getStatusOracleEndpoint(data))
       if (!('flightStatuses' in json) || json.flightStatuses.length < 1) {
         const msg = 'Error: result has no flightStatuses'
         await this.tg.send(msg)
@@ -119,13 +141,22 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
         const { status: statusString } = flightStatuses
         const status = statusHex(statusString)
         if (status === statusHex('L')) {
-          const arrived = 'actualGateArrival' in flightStatuses.operationalTimes
+          let arrived = 'actualGateArrival' in flightStatuses.operationalTimes
+          if (!arrived && 'actualRunwayArrival' in flightStatuses.operationalTimes) {
+            // After 6 hours, we assume that flight has arrived at gate even if there is no "actualGateArrival"
+            arrived = new Date() - new Date(flightStatuses.operationalTimes.actualRunwayArrival.dateUtc) > 6 * hours
+          }
+          if (!arrived && 'scheduledGateArrival') {
+            // After 24 hours, we assume that flight has arrived at gate even if there is no operational times
+            arrived = new Date() - new Date(flightStatuses.operationalTimes.scheduledGateArrival.dateUtc) > 24 * hours
+          }
           if (arrived) {
             const delay = 'delays' in flightStatuses && 'arrivalGateDelayMinutes' in flightStatuses.delays
               ? flightStatuses.delays.arrivalGateDelayMinutes
               : 0
             result = { status, arrived, delay }
-          } else { // landed, but no actualGateArrival, so probably taxiing or doors not open
+          } else {
+            // landed, but no actualGateArrival or actualRunwayArrival, so probably taxiing or doors not open
             result = { status: statusHex('A'), arrived: false, delay: 0 }
           }
         } else {
@@ -143,7 +174,7 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
   async getRatingsOracle(ctx, data) {
     await this.tg.send(`Get Ratings Oracle: ${JSON.stringify(data)}`)
     try {
-      const json = await this.getFlightStatsOracle(ctx, this.getRatingsEndpoint(data))
+      const json = await this.getFlightStatsOracle(ctx, this.getRatingsOracleEndpoint(data))
       const ratings = json.ratings[0]
       const result = {
         observations: ratings.observations,
