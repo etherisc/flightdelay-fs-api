@@ -196,7 +196,9 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
 
   async getQuote(ctx, data) { // data = { premium, carrier, flightNumber }
     await this.tg.send(`Get Quote: ${JSON.stringify(data)}`)
-    const { ratings } = await this.fetchEndpoint(this.getRatingsEndpoint({ carrierFlightNumber: `${data.carrier}/${data.flightNumber}` }))
+    const { ratings } = await this.fetchEndpoint(
+      this.getRatingsEndpoint({ carrier: data.carrier, flightNumber: data.flightNumber }),
+    )
     if (ratings && ratings[0] && ratings[0].observations) {
       const rating = (({
         observations, ontime, late15, late30, late45, cancelled, diverted,
