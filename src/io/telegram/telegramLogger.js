@@ -25,7 +25,12 @@ module.exports = class TelegramLogger {
         // eslint-disable-next-line no-console
         console.log(message)
       } else if (message && this.chatId) {
-        await this.bot.sendMessage(this.chatId, message)
+        try {
+          await this.bot.sendMessage(this.chatId, message)
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(`Error sending telegram message: message=${message}, error=${error.message} ${error.stack}`)
+        }
       }
     }
 
