@@ -14,7 +14,7 @@ module.exports = class FlightDelayService {
   constructor({ config, telegramBot }) {
     this.config = config
     this.httpProvider = config.HTTP_PROVIDER
-    this.flightDelayContractAddress = config.FLIGHTDELAY_ADDRESS
+    this.flightDelayContractAddressDemo = config.FLIGHTDELAY_ADDRESS_DEMO
     this.provider = new ethers.providers.JsonRpcProvider({ url: this.httpProvider })
     this.flightDelayContract = new ethers.Contract(this.flightDelayContractAddressDemo, abi, this.provider)
     this.gif = new Gif.Instance(config.HTTP_PROVIDER, config.GIF_REGISTRY_ADDRESS)
