@@ -16,7 +16,7 @@ module.exports = class FlightDelayService {
     this.httpProvider = config.HTTP_PROVIDER
     this.flightDelayContractAddress = config.FLIGHTDELAY_ADDRESS
     this.provider = new ethers.providers.JsonRpcProvider({ url: this.httpProvider })
-    this.flightDelayContract = new ethers.Contract(this.flightDelayContractAddress, abi, this.provider)
+    this.flightDelayContract = new ethers.Contract(this.flightDelayContractAddressDemo, abi, this.provider)
     this.gif = new Gif.Instance(config.HTTP_PROVIDER, config.GIF_REGISTRY_ADDRESS)
   }
 
