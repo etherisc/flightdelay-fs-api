@@ -6,6 +6,9 @@ module.exports = {
       address: {
         type: 'string',
       },
+      environment: {
+        type: 'string',
+      },
     },
     required: ['address'],
     additionalProperties: false,
@@ -17,6 +20,9 @@ module.exports = {
     properties:
       {
         address: {
+          type: 'string',
+        },
+        environment: {
           type: 'string',
         },
       },

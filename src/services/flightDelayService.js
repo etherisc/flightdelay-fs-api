@@ -15,8 +15,14 @@ module.exports = class FlightDelayService {
     this.config = config
     this.httpProvider = config.HTTP_PROVIDER
     this.flightDelayContractAddressDemo = config.FLIGHTDELAY_ADDRESS_DEMO
+    this.flightDelayContractAddressProduction = config.FLIGHTDELAY_ADDRESS_PRODUCTION
     this.provider = new ethers.providers.JsonRpcProvider({ url: this.httpProvider })
-    this.flightDelayContract = new ethers.Contract(this.flightDelayContractAddressDemo, abi, this.provider)
+    this.flightDelayContractDemo = new ethers.Contract(this.flightDelayContractAddressDemo, abi, this.provider)
+    this.flightDelayContractProduction = new ethers.Contract(
+      this.flightDelayContractAddressProduction,
+      abi,
+      this.provider,
+    )
     this.gif = new Gif.Instance(config.HTTP_PROVIDER, config.GIF_REGISTRY_ADDRESS)
   }
 
@@ -25,8 +31,17 @@ module.exports = class FlightDelayService {
     const {
       data: appData, // , state, createdAt, updatedAt,
     } = await policy.getApplication(bpKey)
+    // const metaData = await policy.metadata(bpKey)
     const decoded = ethers.utils.defaultAbiCoder.decode(['uint256', 'uint256[5]', 'address', 'bytes32'], appData)
     return {
+      /*
+      productId: metaData.productId.toNumber(),
+      claimsCount: metaData.claimsCount.toNumber(),
+      payoutsCount: metaData.payoutsCount.toNumber(),
+      hasPolicy: metaData.hasPolicy,
+      hasApplication: metaData.hasApplication,
+      state: metaData.state,
+       */
       premium: ethers.utils.formatEther(decoded[0]),
       payouts: decoded[1].map((payout) => ethers.utils.formatEther(payout)),
       address: decoded[2],
@@ -34,8 +49,8 @@ module.exports = class FlightDelayService {
     }
   }
 
-  async getRiskData(riskId) {
-    const risk = await this.flightDelayContract.risks(riskId)
+  async getRiskData(riskId, fdContract) {
+    const risk = await fdContract.risks(riskId)
     return {
       carrierFlightNumber: ethers.utils.parseBytes32String(risk.carrierFlightNumber),
       departureYearMonthDay: ethers.utils.parseBytes32String(risk.departureYearMonthDay),
@@ -46,13 +61,16 @@ module.exports = class FlightDelayService {
   }
 
   async getPolicies(ctx, data) { // data = { address }
-    const { address } = data
-    const policyCount = (await this.flightDelayContract.addressToPolicyCount(address)).toNumber()
+    const { address, environment } = data
+    const fdContract = environment && environment === 'production'
+      ? this.flightDelayContractProduction
+      : this.flightDelayContractDemo
+    const policyCount = (await fdContract.addressToPolicyCount(address)).toNumber()
     const policies = []
     for (let policyIndex = 0; policyIndex < policyCount; policyIndex += 1) {
-      const bpKey = await this.flightDelayContract.addressToBpKeys(address, policyIndex)
+      const bpKey = await fdContract.addressToBpKeys(address, policyIndex)
       const appData = await this.getApplicationData(bpKey)
-      const riskData = await this.getRiskData(appData.riskId)
+      const riskData = await this.getRiskData(appData.riskId, fdContract)
       policies.push({ ...appData, ...riskData })
     }
     ctx.ok({ policyCount, policies })
