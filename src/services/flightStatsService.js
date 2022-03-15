@@ -1,7 +1,8 @@
 const fetch = require('node-fetch')
 const ethers = require('ethers')
-
+const fs = require('fs-jetpack')
 const abi = require('../schemas/abi.json')
+// const {spec} = require('mocha/lib/reporters')
 
 const hours = 60 * 60 * 1000
 
@@ -136,12 +137,30 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
     const statusHex = (str) => `0x${str.charCodeAt(0).toString(16)}`
     const revertResult = { status: statusHex('X'), arrived: false, delay: 0 } // this will lead to a revert in the smart contract
     let result
+
+    const checkSpecialFlights = async (data) => {
+      try {
+        const specialFlights = fs.read('src/data/specialFlights.json', 'json')
+        const specialResult = specialFlights.filter(item => JSON.stringify(item.key) === JSON.stringify(data))
+        if (specialResult.length === 0) {
+          const msg = 'Error: result has no flightStatuses'
+          await this.tg.send(msg)
+          ctx.ok(revertResult)
+        } else {
+          const msg = 'Special Flight Result delivered'
+          await this.tg.send(msg)
+          ctx.ok(specialResult[0].value)
+        }
+      } catch (error) {
+        console.log(error.message, error.stack)
+      }
+    }
+
     try {
       const json = await this.getFlightStatsOracle(ctx, this.getStatusOracleEndpoint(data))
       if (!('flightStatuses' in json) || json.flightStatuses.length < 1) {
-        const msg = 'Error: result has no flightStatuses'
-        await this.tg.send(msg)
-        ctx.ok(revertResult)
+        await checkSpecialFlights(data)
+        return
       }
       const flightStatuses = json.flightStatuses[0]
       if (
@@ -176,8 +195,8 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
       await this.tg.send(`Result: ${JSON.stringify(result)}`)
       ctx.ok(result)
     } catch (error) {
-      await this.tg.send(`RevertResult: ${JSON.stringify(revertResult)}`)
-      ctx.ok(revertResult)
+      console.log('ERROR!!!', error.message, error.stack)
+      await checkSpecialFlights(data)
     }
   }
 
