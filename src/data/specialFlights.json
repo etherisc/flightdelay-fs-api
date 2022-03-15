@@ -1,6 +1,6 @@
 [
   {
-    "key": { "carrierFlightNumber": "WI/6127", "yearMonthDay": "2022/03/05" },
+    "key": { "carrierFlightNumber": "W6/6127", "yearMonthDay": "2022/03/05" },
     "value": { "status": "0x43", "arrived": false, "delay": 0 }
   }
 ]
