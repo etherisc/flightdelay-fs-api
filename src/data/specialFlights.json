@@ -1,22 +1,10 @@
 [
   {
-    "key": { "carrierFlightNumber": "LH/1444", "yearMonthDay": "2022/03/15" },
+    "key": { "carrierFlightNumber": "FR/6420", "yearMonthDay": "2022/03/16" },
     "value": { "status": "0x43", "arrived": false, "delay": 0 }
   },
   {
-    "key": { "carrierFlightNumber": "KL/1395", "yearMonthDay": "2022/03/16" },
-    "value": { "status": "0x43", "arrived": false, "delay": 0 }
-  },
-  {
-    "key": { "carrierFlightNumber": "KL/905", "yearMonthDay": "2022/03/16" },
-    "value": { "status": "0x43", "arrived": false, "delay": 0 }
-  },
-  {
-    "key": { "carrierFlightNumber": "FR/3068", "yearMonthDay": "2022/03/16" },
-    "value": { "status": "0x43", "arrived": false, "delay": 0 }
-  },
-  {
-    "key": { "carrierFlightNumber": "AF/1752", "yearMonthDay": "2022/03/17" },
+    "key": { "carrierFlightNumber": "W6/6907", "yearMonthDay": "2022/03/17" },
     "value": { "status": "0x43", "arrived": false, "delay": 0 }
   }
 ]
