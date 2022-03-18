@@ -14,6 +14,17 @@ module.exports = {
     additionalProperties: false,
   },
 
+  getAllPoliciesSchema: {
+    $id: '#all-policies',
+    properties: {
+      environment: {
+        type: 'string',
+      },
+    },
+    required: [],
+    additionalProperties: false,
+  },
+
   getClaimsSchema: {
     $id: '#claims',
     type: 'object',

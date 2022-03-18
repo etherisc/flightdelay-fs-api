@@ -76,6 +76,31 @@ module.exports = class FlightDelayService {
     ctx.ok({ policyCount, policies })
   }
 
+  async getAllPolicies(ctx, data) {
+    try {
+      const { environment } = data
+      const fdContract = environment && environment === 'production'
+        ? this.flightDelayContractProduction
+        : this.flightDelayContractDemo
+      const policy = await this.gif.getContract('Policy')
+      const bpKeyCount = (await policy.getBpKeyCount()).toNumber()
+      const policies = []
+      for (let bpKeyIndex = 0; bpKeyIndex < bpKeyCount; bpKeyIndex += 1) {
+        console.log(bpKeyIndex)
+        const bpKey = await policy.bpKeys(bpKeyIndex)
+        const metaData = await policy.metadata(bpKey)
+        const appData = await this.getApplicationData(bpKey)
+        const riskData = await this.getRiskData(appData.riskId, fdContract )
+        const allData = {...metaData, ...appData, ...riskData}
+        policies.push(allData)
+        console.log(allData)
+      }
+      ctx.ok({ bpKeyCount, policies })
+    } catch (error) {
+      console.log(error.message, error.stack)
+    }
+  }
+
   async getClaims(ctx, data) { // data = { address }
     ctx.ok({ claims: [] })
   }
