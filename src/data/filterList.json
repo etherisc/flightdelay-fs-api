@@ -1,0 +1,55 @@
+{
+  "countries": {
+    "order": "allow",
+    "list": [
+      "AL",
+      "AD",
+      "AR",
+      "AU",
+      "AT",
+      "BS",
+      "BE",
+      "BG",
+      "CA",
+      "CL",
+      "CN",
+      "HR",
+      "CZ",
+      "DK",
+      "FI",
+      "FR",
+      "DE",
+      "GI",
+      "GR",
+      "IS",
+      "IE",
+      "IL",
+      "IT",
+      "JP",
+      "KR",
+      "LU",
+      "MX",
+      "MC",
+      "NL",
+      "PL",
+      "PT",
+      "RO",
+      "SG",
+      "ES",
+      "SE",
+      "CH",
+      "TR",
+      "GB",
+      "US"
+    ]
+  },
+  "airports": {
+    "order": "deny",
+    "list": []
+  },
+  "airlines": {
+    "order": "deny",
+    "list": []
+  }
+}
+

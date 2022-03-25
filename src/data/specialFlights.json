@@ -1,10 +1,6 @@
 [
   {
-    "key": { "carrierFlightNumber": "FR/6420", "yearMonthDay": "2022/03/16" },
-    "value": { "status": "0x43", "arrived": false, "delay": 0 }
-  },
-  {
-    "key": { "carrierFlightNumber": "W6/6907", "yearMonthDay": "2022/03/17" },
+    "key": { "carrierFlightNumber": "xx/xxx", "yearMonthDay": "2022/03/16" },
     "value": { "status": "0x43", "arrived": false, "delay": 0 }
   }
 ]
