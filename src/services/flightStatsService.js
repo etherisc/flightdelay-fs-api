@@ -216,11 +216,6 @@ ${this.flightStatsBaseURL}${this.flightRatingsEndpoint}\
           ? list.includes(departure) && list.includes(arrival)
           : !(list.includes(departure) || list.includes(arrival)))
       }
-      console.log(
-        `Country: ${isOk('countries', departureCountry, arrivalCountry) ? 'ok' : 'not ok'}, \
-Airports: ${isOk('airports', departureAirportFsCode, arrivalAirportFsCode) ? 'ok' : 'not ok'}, \
-Airlines: ${isOk('airlines', airlineFsCode, airlineFsCode) ? 'ok' : 'not ok'}`
-      )
       return (
         isOk('countries', departureCountry, arrivalCountry) &&
         isOk('airports', departureAirportFsCode, arrivalAirportFsCode) &&
