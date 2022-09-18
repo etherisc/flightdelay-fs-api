@@ -1,12 +1,13 @@
 [
- { "key": { "carrierFlightNumber": "KL/3097", "yearMonthDay": "2022/03/19" }, "value": { "status": "0x43", "arrived": false, "delay": 0 } },
- { "key": { "carrierFlightNumber": "QR/295", "yearMonthDay": "2022/03/18" }, "value": { "status": "0x43", "arrived": false, "delay": 0 } },
- { "key": { "carrierFlightNumber": "FR/9192", "yearMonthDay": "2022/03/18" }, "value": { "status": "0x43", "arrived": false, "delay": 0 } },
- { "key": { "carrierFlightNumber": "FR/9515", "yearMonthDay": "2022/03/18" }, "value": { "status": "0x43", "arrived": false, "delay": 0 } },
- { "key": { "carrierFlightNumber": "VN/36", "yearMonthDay": "2022/03/21" }, "value": { "status": "0x43", "arrived": false, "delay": 0 } },
- { "key": { "carrierFlightNumber": "FR/3064", "yearMonthDay": "2022/05/04" }, "value": { "status": "0x4C", "arrived": true, "delay": 0 } },
- { "key": { "carrierFlightNumber": "U2/7976", "yearMonthDay": "2022/04/12" }, "value": { "status": "0x4C", "arrived": true, "delay": 0 } },
- { "key": { "carrierFlightNumber": "DL/50", "yearMonthDay": "2022/05/20" }, "value": { "status": "0x4C", "arrived": true, "delay": 0 } },
- { "key": { "carrierFlightNumber": "DL/2337", "yearMonthDay": "2022/05/20" }, "value": { "status": "0x4C", "arrived": true, "delay": 0 } },
- { "key": { "carrierFlightNumber": "DL/878", "yearMonthDay": "2022/05/16" }, "value": { "status": "0x4C", "arrived": true, "delay": 0 } }
+ { "key": { "carrierFlightNumber": "IB/2602", "yearMonthDay": "06/08/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 0}},
+ { "key": { "carrierFlightNumber": "FR/4542", "yearMonthDay": "14/08/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 0}},
+ { "key": { "carrierFlightNumber": "FR/4541", "yearMonthDay": "07/08/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 0}},
+ { "key": { "carrierFlightNumber": "AC/419",  "yearMonthDay": "24/07/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 82}},
+ { "key": { "carrierFlightNumber": "DL/2244", "yearMonthDay": "24/07/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 0}},
+ { "key": { "carrierFlightNumber": "DL/2492", "yearMonthDay": "29/06/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 0}},
+ { "key": { "carrierFlightNumber": "DL/2492", "yearMonthDay": "28/06/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 0}},
+ { "key": { "carrierFlightNumber": "LH/1402", "yearMonthDay": "09/06/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 0}},
+ { "key": { "carrierFlightNumber": "LH/201",  "yearMonthDay": "09/06/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 32}},
+ { "key": { "carrierFlightNumber": "U2/1864", "yearMonthDay": "18/06/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 0}},
+ { "key": { "carrierFlightNumber": "LX/976",  "yearMonthDay": "06/06/2022" }, "value": { "status": "0x4C", "arrived": true, "delay": 0}}
 ]
